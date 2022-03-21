@@ -12,7 +12,7 @@ transaction(id: UInt64, redeemerAddress: Address){
     let nftCollection: &{NonFungibleToken.CollectionPublic}
 
     prepare(signer: AuthAccount) {
-         // If the acconut doesn't already have a Gaia NFT Collection
+        // Gaia NFT Collection init
         if signer.borrow<&Gaia.Collection>(from: Gaia.CollectionStoragePath) == nil {
             let collection <- Gaia.createEmptyCollection() as! @Gaia.Collection
             signer.save(<-collection, to: Gaia.CollectionStoragePath)
