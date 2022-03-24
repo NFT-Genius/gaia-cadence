@@ -1,8 +1,8 @@
-import FungibleToken from 0xFungibleToken
-import NonFungibleToken from 0xNonFungibleToken 
-import FlowToken from 0xFlowToken
-import Gaia from 0xGaia
-import NFTStorefront from 0xNFTStorefront
+import FungibleToken from 0x9a0766d93b6608b7
+import NonFungibleToken from 0x631e88ae7f1d7c20
+import FlowToken from 0x7e60df042a9c0868
+import Gaia from 0x40e47dca6a761db7
+import NFTStorefront from 0x94b06cfca1d8a476
 
 // create Storefront listing that accepts Flow
 // todo: implement signature
