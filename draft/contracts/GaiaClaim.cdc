@@ -1,6 +1,6 @@
 /** 
 
-    ClaimNFT.cdc
+    GaiaClaim.cdc
 
     Description: Allows admins to mint redeemable "claim" NFTs, simple NFTs with initially hidden metadatas.
 
@@ -19,15 +19,15 @@
 
 import NonFungibleToken from "./core/NonFungibleToken.cdc"
 import FungibleToken from "./core/FungibleToken.cdc"
-import IClaimNFT from "./IClaimNFT.cdc"
+import IGaiaClaim from "./IGaiaClaim.cdc"
 import Crypto
 
-pub contract ClaimNFT: NonFungibleToken, IClaimNFT {
+pub contract GaiaClaim: NonFungibleToken, IGaiaClaim {
 
     pub let CollectionStoragePath: StoragePath
     pub let CollectionPublicPath: PublicPath
     pub let CollectionPrivatePath: PrivatePath
-    pub let IClaimNFTCollectionPublicPath: PublicPath
+    pub let IGaiaClaimCollectionPublicPath: PublicPath
     pub let AdminStoragePath: StoragePath
     pub let AdminPrivatePath: PrivatePath
     pub let AuthorizerStoragePath: StoragePath
@@ -56,7 +56,7 @@ pub contract ClaimNFT: NonFungibleToken, IClaimNFT {
 
     pub resource Claim {
         pub let commitHash: String
-        pub var status: ClaimNFT.Status
+        pub var status: GaiaClaim.Status
 
         // fields to be "revealed" by admin
         pub var metadata: AnyStruct
@@ -86,23 +86,23 @@ pub contract ClaimNFT: NonFungibleToken, IClaimNFT {
     // privileges listens for this event and submits a tx to reveal the claim metadata and salt.
     // This revealed metadata and salt helps a seperate "Redeemer" contract facilitate the
     // exchange of the claim for associated NFTs.
-    pub resource NFT: NonFungibleToken.INFT, IClaimNFT.IClaimToken {
+    pub resource NFT: NonFungibleToken.INFT, IGaiaClaim.IClaimToken {
         pub let id: UInt64
         pub let commitHash: String
 
         init(commitHash:String) {
             self.commitHash = commitHash
 
-            ClaimNFT.totalSupply = ClaimNFT.totalSupply + 1
-            self.id = ClaimNFT.totalSupply 
+            GaiaClaim.totalSupply = GaiaClaim.totalSupply + 1
+            self.id = GaiaClaim.totalSupply 
         }
 
         pub fun reveal(){
-            ClaimNFT.requestReveal(id: self.id)
+            GaiaClaim.requestReveal(id: self.id)
         }
     }
 
-    pub resource Collection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic, IClaimNFT.IClaimNFTCollectionPublic {
+    pub resource Collection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic, IGaiaClaim.IGaiaClaimCollectionPublic {
         pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
         init () {
@@ -116,7 +116,7 @@ pub contract ClaimNFT: NonFungibleToken, IClaimNFT {
         }
 
         pub fun deposit(token: @NonFungibleToken.NFT) {
-            let token <- token as! @ClaimNFT.NFT
+            let token <- token as! @GaiaClaim.NFT
             let id: UInt64 = token.id
             let oldToken <- self.ownedNFTs[id] <- token
             emit Deposit(id: id, to: self.owner?.address)
@@ -132,11 +132,11 @@ pub contract ClaimNFT: NonFungibleToken, IClaimNFT {
             return &self.ownedNFTs[id] as &NonFungibleToken.NFT
         }
 
-        pub fun borrowClaimNFT(id: UInt64): &IClaimNFT.NFT? {
+        pub fun borrowGaiaClaim(id: UInt64): &IGaiaClaim.NFT? {
             let nft<- self.ownedNFTs.remove(key: id) ?? panic("missing NFT")
-            let token <- nft as! @ClaimNFT.NFT
-            let ref = &token as &IClaimNFT.NFT
-            self.ownedNFTs[id] <-! token as! @ClaimNFT.NFT
+            let token <- nft as! @GaiaClaim.NFT
+            let ref = &token as &IGaiaClaim.NFT
+            self.ownedNFTs[id] <-! token as! @GaiaClaim.NFT
             return ref
         }
 
@@ -155,14 +155,14 @@ pub contract ClaimNFT: NonFungibleToken, IClaimNFT {
         }
     }
 
-    pub resource Admin: IClaimNFT.IAdmin {
+    pub resource Admin: IGaiaClaim.IAdmin {
         pub fun mintClaim(hash: String, dropID: UInt64): @NonFungibleToken.NFT{
             // mint new claim nft
             let claimNFT <- create NFT(commitHash: hash) 
 
             // add claim to claim resource dictionary to preserve state
             let claim <- create Claim(commitHash: claimNFT.commitHash)
-            ClaimNFT.claims[claimNFT.id] <-! claim
+            GaiaClaim.claims[claimNFT.id] <-! claim
 
             emit Mint(
                 id: claimNFT.id,
@@ -174,33 +174,33 @@ pub contract ClaimNFT: NonFungibleToken, IClaimNFT {
         }
 
         pub fun revealClaim(id: UInt64, metadata: AnyStruct, salt: String) {
-            var claim <- ClaimNFT.claims.remove(key:id) ?? panic("no such claim")
+            var claim <- GaiaClaim.claims.remove(key:id) ?? panic("no such claim")
             claim.reveal(id: id, metadata: metadata, salt: salt)
-            ClaimNFT.claims[id] <-! claim
+            GaiaClaim.claims[id] <-! claim
         }
     }
 
     // emit an event that prompts the backend service with admin privileges to submit a tx revealing 
     // the claim metadata and salt
     access(contract) fun requestReveal(id: UInt64){
-        let claim = ClaimNFT.borrowClaim(id: id) ?? panic("no such claim")
-        assert(claim.status == ClaimNFT.Status.Sealed, message:"claim status must be Sealed")
+        let claim = GaiaClaim.borrowClaim(id: id) ?? panic("no such claim")
+        assert(claim.status == GaiaClaim.Status.Sealed, message:"claim status must be Sealed")
         emit RequestedReveal(
             id: id
         )
     }
 
     init(){
-        self.CollectionStoragePath = /storage/ClaimNFTCollection
-        self.CollectionPublicPath = /public/ClaimNFTCollection
-        self.CollectionPrivatePath = /private/ClaimNFTCollection
+        self.CollectionStoragePath = /storage/GaiaClaimCollection001
+        self.CollectionPublicPath = /public/GaiaClaimCollection001
+        self.CollectionPrivatePath = /private/GaiaClaimCollection001
 
-        self.IClaimNFTCollectionPublicPath = /public/IClaimNFTCollection
+        self.IGaiaClaimCollectionPublicPath = /public/IGaiaClaimCollection001
 
-        self.AdminStoragePath = /storage/ClaimNFTAdmin
-        self.AdminPrivatePath = /private/ClaimNFTAdmin
+        self.AdminStoragePath = /storage/GaiaClaimAdmin
+        self.AdminPrivatePath = /private/GaiaClaimAdmin
 
-        self.AuthorizerStoragePath = /storage/ClaimNFTAuthorizer
+        self.AuthorizerStoragePath = /storage/GaiaClaimAuthorizer
 
         self.totalSupply = 0
         self.claims <- {} 
@@ -210,7 +210,7 @@ pub contract ClaimNFT: NonFungibleToken, IClaimNFT {
         self.account.save(<-collection, to: self.CollectionStoragePath)
         self.account.link<&Collection{NonFungibleToken.CollectionPublic}>(self.CollectionPublicPath, target: self.CollectionStoragePath)
         self.account.link<&Collection{NonFungibleToken.Provider, NonFungibleToken.CollectionPublic}>(self.CollectionPrivatePath, target: self.CollectionStoragePath)
-        self.account.link<&Collection{IClaimNFT.IClaimNFTCollectionPublic}>(self.IClaimNFTCollectionPublicPath, target: self.CollectionStoragePath)
+        self.account.link<&Collection{IGaiaClaim.IGaiaClaimCollectionPublic}>(self.IGaiaClaimCollectionPublicPath, target: self.CollectionStoragePath)
 
         // Create/Save an Authorizer to create new admins
         let authorizer <- create Authorizer()
@@ -219,7 +219,7 @@ pub contract ClaimNFT: NonFungibleToken, IClaimNFT {
         // Create/Save an Admin to manually mint, reveal, and redeem claims
         let admin <- create Admin() 
         self.account.save(<-admin, to: self.AdminStoragePath)
-        self.account.link<&Admin{IClaimNFT.IAdmin}>(self.AdminPrivatePath, target: self.AdminStoragePath)
+        self.account.link<&Admin{IGaiaClaim.IAdmin}>(self.AdminPrivatePath, target: self.AdminStoragePath)
 
         emit ContractInitialized()
     }

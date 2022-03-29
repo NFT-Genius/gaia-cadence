@@ -1,8 +1,8 @@
 /** 
 
-    ClaimNFTRedeemer.cdc
+    GaiaClaimRedeemer.cdc
 
-    Description: Facilitates the exchange of Claim NFTs for NFTs.
+    Description: Facilitates the exchange of Gaia Claim NFTs for NFTs.
 
     This contract belongs to a set of "Drop" contracts that seek to orchestrate dynamic, type agnostic,
     NFT drops.
@@ -16,9 +16,9 @@
 
 import NonFungibleToken from "./core/NonFungibleToken.cdc"
 import FungibleToken from "./core/FungibleToken.cdc"
-import ClaimNFT from "./ClaimNFT.cdc"
+import GaiaClaim from "./GaiaClaim.cdc"
 
-pub contract ClaimNFTRedeemer {
+pub contract GaiaClaimRedeemer {
 
     pub let RedeemerStoragePath: StoragePath
     pub let RedeemerPublicPath: PublicPath
@@ -28,7 +28,7 @@ pub contract ClaimNFTRedeemer {
     pub event ContractInitialized()
 
     pub resource interface RedeemerPublic {
-        pub fun redeemClaim(claimNFT: @ClaimNFT.NFT): @[NonFungibleToken.NFT]
+        pub fun redeemClaim(claimNFT: @GaiaClaim.NFT): @[NonFungibleToken.NFT]
     }
 
     // fully qualified token name
@@ -102,10 +102,10 @@ pub contract ClaimNFTRedeemer {
         }
 
         // exchange claim for associated NFTs
-        pub fun redeemClaim(claimNFT: @ClaimNFT.NFT): @[NonFungibleToken.NFT]{
+        pub fun redeemClaim(claimNFT: @GaiaClaim.NFT): @[NonFungibleToken.NFT]{
             let collection = self.collectionCap.borrow() ?? panic("cannot borrow collection")
-            let claim = ClaimNFT.borrowClaim(id: claimNFT.id) ?? panic("missing associated claim data")
-            assert(claim.status == ClaimNFT.Status.Revealed, message: "claim must be revealed before redemption")
+            let claim = GaiaClaim.borrowClaim(id: claimNFT.id) ?? panic("missing associated claim data")
+            assert(claim.status == GaiaClaim.Status.Revealed, message: "claim must be revealed before redemption")
 
             let fqtns = claim.metadata as? [FQTN] ?? panic("claim metadata type mismatch")
             let fqtnsString = self.verifyClaim(fqtns: fqtns, salt: claim.salt!, commitHash: claim.commitHash) 
@@ -147,9 +147,9 @@ pub contract ClaimNFTRedeemer {
 
     init(){
         // default paths but not intended for multi redeemers on same acct
-        self.RedeemerStoragePath = /storage/ClaimNFTRedeemer
-        self.RedeemerPublicPath = /public/ClaimNFTRedeemer
-        self.RedeemerPrivatePath = /private/ClaimNFTRedeemer
+        self.RedeemerStoragePath = /storage/GaiaClaimRedeemer001
+        self.RedeemerPublicPath = /public/GaiaClaimRedeemer001
+        self.RedeemerPrivatePath = /private/GaiaClaimRedeemer001
 
         emit ContractInitialized()
     }

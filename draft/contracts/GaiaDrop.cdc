@@ -1,6 +1,6 @@
 /** 
 
-    NFTDrop.cdc
+    GaiaDrop.cdc
 
     Description: Facilitates the exchange of Fungible Tokens for NFTs.
 
@@ -16,7 +16,7 @@
 import NonFungibleToken from "./core/NonFungibleToken.cdc"
 import FungibleToken from "./core/FungibleToken.cdc"
 
-pub contract NFTDrop {
+pub contract GaiaDrop {
 
     pub let DropStoragePath: StoragePath
     pub let DropPublicPath: PublicPath
@@ -43,11 +43,13 @@ pub contract NFTDrop {
 
         pub fun toString(): String {
             var nftIDString = ""
-            for i, id in self.nftIDs {
+            var i = 0
+            for id in self.nftIDs {
                 nftIDString = nftIDString.concat(id.toString())
                 if i < self.nftIDs.length-1 {
                     nftIDString = nftIDString.concat(",")
                 }
+                i = i + 1
             }
             return self.dropAddress.toString().concat(":")
                 .concat(self.purchaserAddress.toString()).concat(":")
@@ -265,9 +267,9 @@ pub contract NFTDrop {
 
     init() {
         // default paths but not intended for multi drops on same acct
-        self.DropStoragePath = /storage/NFTDrop
-        self.DropPublicPath = /public/NFTDrop
-        self.DropPrivatePath = /private/NFTDrop
+        self.DropStoragePath = /storage/GaiaDrop001
+        self.DropPublicPath = /public/GaiaDrop001
+        self.DropPrivatePath = /private/GaiaDrop001
 
         emit ContractInitialized()
     }
