@@ -17,9 +17,9 @@
 
 **/
 
-import NonFungibleToken from "./core/NonFungibleToken.cdc"
-import FungibleToken from "./core/FungibleToken.cdc"
-import IGaiaClaim from "./IGaiaClaim.cdc"
+import NonFungibleToken from 0x1d7e57aa55817448
+import FungibleToken from 0xf233dcee88fe0abe
+import IGaiaClaim from 0x01ddf82c652e36ef
 import Crypto
 
 pub contract GaiaClaim: NonFungibleToken, IGaiaClaim {
