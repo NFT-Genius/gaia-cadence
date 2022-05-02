@@ -45,8 +45,8 @@
 
  */
 
-import NonFungibleToken from "../../../core/contract/NonFungibleToken.cdc"
-import MetadataViews from "../../../core/contract/MetadataViews.cdc"
+import NonFungibleToken from 0x1d7e57aa55817448
+import MetadataViews from 0x1d7e57aa55817448
 import Crypto
 
 pub contract GaiaNFT: NonFungibleToken {
@@ -190,9 +190,7 @@ pub contract GaiaNFT: NonFungibleToken {
 
     // Fetch the metadata Template represented by this NFT
     pub fun template(): {TemplateNFT} {
-      let set = &GaiaNFT.sets[self.setId] as &GaiaNFT.Set
-      let template = set.templates[self.templateId]
-      return template
+      return GaiaNFT.getTemplate(setId: self.setId, templateId: self.templateId)
     }
 
     // Proxy for MetadataViews.Resolver.getViews implemented by Template
@@ -372,7 +370,7 @@ pub contract GaiaNFT: NonFungibleToken {
     pub var metadata: SetMetadata
 
     // Templates configured to be minted from this Set
-    pub var templates: [Template]
+    access(contract) var templates: [Template]
 
     // Number of NFTs that have minted from this Set
     pub var minted: UInt64
@@ -560,11 +558,11 @@ pub contract GaiaNFT: NonFungibleToken {
 
   // Safe Template interface for anyone inspecting NFTs
   pub struct interface TemplateNFT {
-    pub let checksum: [UInt8]
     pub let defaultDisplay: MetadataViews.Display
-    pub var salt: [UInt8]?
     pub var metadata: {GaiaMetadata}?
     pub var mintID: UInt64?
+    pub fun checksum(): [UInt8]
+    pub fun salt(): [UInt8]?
     pub fun revealed(): Bool
     pub fun getViews(): [Type]
     pub fun resolveView(_ view: Type): AnyStruct?
@@ -573,14 +571,14 @@ pub contract GaiaNFT: NonFungibleToken {
   pub struct Template: TemplateNFT {
 
     // checksum as described above
-    pub let checksum: [UInt8]
+    access(self) let _checksum: [UInt8]
 
     // Default Display in case the Template has not yet been revealed
     pub let defaultDisplay: MetadataViews.Display
 
     // salt and metadata are optional so they can be revealed later, such that
     // SHA3_256(salt || metadata.hash()) == checksum
-    pub var salt: [UInt8]?
+    access(self) var _salt: [UInt8]?
     pub var metadata: {GaiaMetadata}?
 
     // Convenience attribute to mark whether or not Template has minted NFT
@@ -594,7 +592,7 @@ pub contract GaiaNFT: NonFungibleToken {
           salt.concat(metadata.hash())
         )
       )
-      let checksum = String.encodeHex(self.checksum)
+      let checksum = String.encodeHex(self.checksum())
       return hash == checksum
     }
 
@@ -610,7 +608,15 @@ pub contract GaiaNFT: NonFungibleToken {
           : "salt || metadata.hash() does not hash to checksum"
       }
       self.metadata = metadata
-      self.salt = salt
+      self._salt = salt
+    }
+
+    pub fun checksum(): [UInt8] {
+      return self._checksum
+    }
+
+    pub fun salt(): [UInt8]? {
+      return self._salt
     }
 
     // Check to see if metadata has been revealed
@@ -643,10 +649,10 @@ pub contract GaiaNFT: NonFungibleToken {
     }
 
     init(checksum: [UInt8], defaultDisplay: MetadataViews.Display) {
-      self.checksum = checksum
+      self._checksum = checksum
       self.defaultDisplay = defaultDisplay
 
-      self.salt = nil
+      self._salt = nil
       self.metadata = nil
       self.mintID = nil
     }
