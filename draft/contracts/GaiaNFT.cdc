@@ -45,8 +45,8 @@
 
  */
 
-import NonFungibleToken from 0x1d7e57aa55817448
-import MetadataViews from 0x1d7e57aa55817448
+import NonFungibleToken from 0xNonFungibleToken
+import MetadataViews from 0xMetadataViews
 import Crypto
 
 pub contract GaiaNFT: NonFungibleToken {

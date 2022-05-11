@@ -1,5 +1,5 @@
-import GaiaNFT from 0x8b148183c28ff88f
-import MetadataViews from 0x1d7e57aa55817448
+import GaiaNFT from 0xGaiaNFT
+import MetadataViews from 0xMetadataViews
 
 pub contract GaiaStandardMetadata {
   pub struct FileMetadataWithDisplay: GaiaNFT.GaiaMetadata {
