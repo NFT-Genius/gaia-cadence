@@ -1,7 +1,7 @@
-import GaiaPrimarySale from 0xGaiaPrimarySale
+import GaiaPrimarySale from 0x8cd1880bb292c236
 import NonFungibleToken from 0x631e88ae7f1d7c20
 import FungibleToken from 0x9a0766d93b6608b7
-import SNKRHUDNFT from 0xSNKRHUDNFT
+import SNKRHUDNFT from 0x9a85ed382b96c857
 import DapperUtilityCoin from 0x82ec283f88a62e65
 
 transaction(
