@@ -1,6 +1,6 @@
 import NonFungibleToken from 0x1d7e57aa55817448
-import GaiaPrimarySale from 0xGaiaPrimarySale
-import SNKRHUDNFT from 0xSNKRHUDNFT
+import GaiaPrimarySale from 0x01ddf82c652e36ef
+import SNKRHUDNFT from 0x80af1db15aa6535a
 
 pub contract SNKRHUDNFTPrimarySaleMinter {
     pub resource Minter: GaiaPrimarySale.IMinter {
