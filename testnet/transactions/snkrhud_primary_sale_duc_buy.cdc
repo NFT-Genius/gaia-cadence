@@ -21,7 +21,7 @@ transaction(
     let mainDapperUtilityCoinVault: &DapperUtilityCoin.Vault
     let balanceBeforeTransfer: UFix64
 
-    prepare(signer: AuthAccount, dapper: AuthAccount) {
+    prepare(dapper: AuthAccount, signer: AuthAccount) {
         assert(marketplaceAddress == 0x2f0533311ae9ab7a, message: "Incorrect marketplace address")
 
         self.purchaserAddress = signer.address
