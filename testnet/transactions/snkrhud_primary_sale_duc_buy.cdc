@@ -22,7 +22,7 @@ transaction(
     let balanceBeforeTransfer: UFix64
 
     prepare(signer: AuthAccount, dapper: AuthAccount) {
-        assert(marketplaceAddress == 0x8fb4a6a11757b80d, message: "Incorrect marketplace address")
+        assert(marketplaceAddress == 0x2f0533311ae9ab7a, message: "Incorrect marketplace address")
 
         self.purchaserAddress = signer.address
 
