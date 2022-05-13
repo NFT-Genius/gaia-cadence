@@ -5,6 +5,7 @@ import SNKRHUDNFT from 0x80af1db15aa6535a
 import DapperUtilityCoin from 0xead892083b3e2c6c
 
 transaction(
+    marketplaceAddress: Address,
     primarySaleAddress: Address,
     primarySaleExternalID: String,
     assetIDs: [UInt64],
@@ -20,7 +21,9 @@ transaction(
     let mainDapperUtilityCoinVault: &DapperUtilityCoin.Vault
     let balanceBeforeTransfer: UFix64
 
-    prepare(signer: AuthAccount, dapper: AuthAccount) {
+    prepare(dapper: AuthAccount, signer: AuthAccount) {
+        assert(marketplaceAddress == 0x9eef2e4511390ce4, message: "Incorrect marketplace address")
+
         self.purchaserAddress = signer.address
 
         self.primarySale = getAccount(primarySaleAddress).getCapability<&{GaiaPrimarySale.PrimarySalePublic}>(GaiaPrimarySale.PrimarySalePublicPath).borrow()
