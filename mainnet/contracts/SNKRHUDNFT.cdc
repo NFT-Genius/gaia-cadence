@@ -404,8 +404,6 @@ pub contract SNKRHUDNFT: NonFungibleToken {
   pub struct SetMetadata {
     pub var name: String
     pub var description: String
-
-    // todo: rename
     pub var externalID: String
 
     init(name: String, description: String, externalID: String) {
