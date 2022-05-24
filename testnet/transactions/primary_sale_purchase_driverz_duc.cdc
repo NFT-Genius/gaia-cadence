@@ -5,6 +5,7 @@ import DriverzNFT from 0xf44b704689c35798
 import DapperUtilityCoin from 0x82ec283f88a62e65
 
 transaction(
+    marketplaceAddress: Address,
     primarySaleAddress: Address,
     primarySaleExternalID: String,
     assetIDs: [UInt64],
@@ -20,7 +21,9 @@ transaction(
     let mainDapperUtilityCoinVault: &DapperUtilityCoin.Vault
     let balanceBeforeTransfer: UFix64
 
-    prepare(signer: AuthAccount, dapper: AuthAccount) {
+    prepare(dapper: AuthAccount, signer: AuthAccount) {
+        assert(marketplaceAddress == 0x2f0533311ae9ab7a, message: "Incorrect marketplace address")
+
         self.purchaserAddress = signer.address
 
         self.primarySale = getAccount(primarySaleAddress).getCapability<&{GaiaPrimarySale.PrimarySalePublic}>(GaiaPrimarySale.PrimarySalePublicPath).borrow()

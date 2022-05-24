@@ -70,7 +70,7 @@ transaction(saleItemID: UInt64, saleItemPrice: UFix64, cutAddresses: [Address], 
         }
 
         let publicKey = PublicKey(
-            publicKey: "dddd52da46af51203d5101de0214c2f0a22d97bcc0c824f6a2dfe91baa4e94465d2f9ffd8180d84fcfa72dc78cdebe3842a7b1a843e76444d81bdbf77ff29be1".decodeHex(),
+            publicKey: "5fbbb87a5d3f1682f679afc8b46d6d9e65ed6296dcf001d026167380472875a676b38e1b583042d3f8a9c2eba1ae242295f56ef78d32c1fa8297a764b67ce8f0".decodeHex(),
             signatureAlgorithm: SignatureAlgorithm.ECDSA_P256
         )
 
