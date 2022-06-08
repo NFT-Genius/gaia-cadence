@@ -13,13 +13,14 @@ transaction(nftID: UInt64) {
 
         self.orderAddress = acct.address
 
-
-        // find all existing listings with matching nft id 
+        // find all existing listings with matching nft id and matching type 
         self.listings = []
         let listingIDs = self.storefront.getListingIDs()
         for id in listingIDs {
             let listing = self.storefront.borrowListing(listingResourceID: id)! 
-            if listing.getDetails().nftID == nftID {
+            let details = listing.getDetails()
+            if details.nftID == nftID && 
+                details.nftType == Type<@AllDay.NFT>() {
                 self.listings.append(listing)
             }
         }
@@ -27,7 +28,7 @@ transaction(nftID: UInt64) {
     }
 
     execute {
-        // remove listings
+        // remove orders
         for listing in self.listings {
             GaiaOrder.removeOrder(
                 storefront: self.storefront,

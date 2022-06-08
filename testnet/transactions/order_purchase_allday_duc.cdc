@@ -17,7 +17,7 @@ transaction (orderId: UInt64, storefrontAddress: Address, expectedPrice: UFix64)
     let balanceBeforeTransfer: UFix64
 
     prepare(dapper: AuthAccount, acct: AuthAccount, svcAcct: AuthAccount) {
-        assert(svcAcct.address == 0x40e47dca6a761db7, message: "Must be signed by service account")
+        assert(svcAcct.address == 0x4dfd62c88d1b6462, message: "Must be signed by service account")
 
         self.storefront = getAccount(storefrontAddress)
             .getCapability(NFTStorefront.StorefrontPublicPath)!

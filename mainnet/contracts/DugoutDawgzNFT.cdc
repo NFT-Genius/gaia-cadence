@@ -240,7 +240,7 @@ pub contract DugoutDawgzNFT: NonFungibleToken {
         self.ownedNFTs.containsKey(id)
           : "NFT does not exist in collection."
       }
-      return &self.ownedNFTs[id] as &NonFungibleToken.NFT
+      return (&self.ownedNFTs[id] as &NonFungibleToken.NFT?)!
     }
 
     // Borrow a reference to the specified NFT as a DugoutDawgzNFT.
@@ -250,7 +250,7 @@ pub contract DugoutDawgzNFT: NonFungibleToken {
         self.ownedNFTs.containsKey(id)
           : "NFT does not exist in collection."
       }
-      let ref = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT
+      let ref = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
       return ref as! &NFT
     }
 
@@ -261,7 +261,7 @@ pub contract DugoutDawgzNFT: NonFungibleToken {
         self.ownedNFTs.containsKey(id)
           : "NFT does not exist in collection."
       }
-      let nft = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT
+      let nft = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
       let typedNFT = nft as! &NFT
       return typedNFT
     }
@@ -404,8 +404,6 @@ pub contract DugoutDawgzNFT: NonFungibleToken {
   pub struct SetMetadata {
     pub var name: String
     pub var description: String
-
-    // todo: rename
     pub var externalID: String
 
     init(name: String, description: String, externalID: String) {
@@ -439,7 +437,7 @@ pub contract DugoutDawgzNFT: NonFungibleToken {
 
   // Generate a SetReport for informational purposes (to be used with scripts)
   pub fun generateSetReport(setID: UInt64): SetReport {
-    let setRef = &self.sets[setID] as &Set
+    let setRef = (&self.sets[setID] as &Set?)!
     return SetReport(
       id: setID,
       isLocked: setRef.isLocked,
@@ -567,7 +565,7 @@ pub contract DugoutDawgzNFT: NonFungibleToken {
 
   // Public helper function to be able to inspect any Template
   pub fun getTemplate(setID: UInt64, templateID: UInt64): {NFTTemplate} {
-    let setRef = &self.sets[setID] as &Set
+    let setRef = (&self.sets[setID] as &Set?)!
     return setRef.templates[templateID]
   }
 
@@ -579,7 +577,7 @@ pub contract DugoutDawgzNFT: NonFungibleToken {
     }
 
     pub fun mint(templateID: UInt64, creator: Address): @NFT {
-      let set = &DugoutDawgzNFT.sets[self.setID] as &Set
+      let set = (&DugoutDawgzNFT.sets[self.setID] as &Set?)!
       return <- set.mint(templateID: templateID, creator: creator)
     }
   }
@@ -596,7 +594,7 @@ pub contract DugoutDawgzNFT: NonFungibleToken {
     }
 
     pub fun borrowSet(setID: UInt64): &Set {
-      return &DugoutDawgzNFT.sets[setID] as &Set
+      return (&DugoutDawgzNFT.sets[setID] as &Set?)!
     }
 
     pub fun createSetMinter(setID: UInt64): @SetMinter {

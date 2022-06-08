@@ -1,10 +1,10 @@
-import GaiaOrder from 0xdaabc8918ed8cf52
-import GaiaFee from 0xdaabc8918ed8cf52
-import AllDay from 0x4dfd62c88d1b6462
-import NFTStorefront from 0x94b06cfca1d8a476
-import NonFungibleToken from 0x631e88ae7f1d7c20
-import DapperUtilityCoin from 0x82ec283f88a62e65
-import FungibleToken from 0x9a0766d93b6608b7
+import GaiaOrder from 0x8b148183c28ff88f
+import GaiaFee from 0x8b148183c28ff88f
+import AllDay from 0xe4cf4bdc1751c65d
+import NFTStorefront from 0x4eb8a10cb9f87357
+import NonFungibleToken from 0x1d7e57aa55817448
+import DapperUtilityCoin from 0xead892083b3e2c6c
+import FungibleToken from 0xf233dcee88fe0abe
 
 transaction(nftID: UInt64, price: UFix64) {
     let nftProvider: Capability<&{NonFungibleToken.Provider, NonFungibleToken.CollectionPublic}>
@@ -41,7 +41,10 @@ transaction(nftID: UInt64, price: UFix64) {
         let listingIDs = self.storefront.getListingIDs()
         for id in listingIDs {
             let listing = self.storefront.borrowListing(listingResourceID: id)! 
-            if listing.getDetails().nftID == nftID {
+            let details = listing.getDetails()
+            if details.nftID == nftID && 
+                details.nftType == Type<@AllDay.NFT>() && 
+                    details.salePaymentVaultType == Type<@DapperUtilityCoin.Vault>() {
                 self.oldListings.append(listing)
             }
         }
@@ -62,7 +65,7 @@ transaction(nftID: UInt64, price: UFix64) {
         let extraCuts: [GaiaOrder.PaymentPart] = []
 
         // specify fees for AllDay (this is secure because all txs must be whitelisted by Dapper)
-        let feeRecipientAddress: Address = 0x4dfd62c88d1b6462 
+        let feeRecipientAddress: Address = 0xAllDay 
         let feePercentage = 0.05
 
         royalties.append(GaiaOrder.PaymentPart(address: feeRecipientAddress, rate: feePercentage))
