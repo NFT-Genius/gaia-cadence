@@ -65,7 +65,7 @@ transaction(nftID: UInt64, price: UFix64) {
         let extraCuts: [GaiaOrder.PaymentPart] = []
 
         // specify fees for AllDay (this is secure because all txs must be whitelisted by Dapper)
-        let feeRecipientAddress: Address = 0xAllDay 
+        let feeRecipientAddress: Address = 0xe4cf4bdc1751c65d 
         let feePercentage = 0.05
 
         royalties.append(GaiaOrder.PaymentPart(address: feeRecipientAddress, rate: feePercentage))
