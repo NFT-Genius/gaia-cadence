@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 
-import NonFungibleToken from 0x1d7e57aa55817448	
-import MetadataViews from 0x1d7e57aa55817448	
+import NonFungibleToken from 0x631e88ae7f1d7c20
+import MetadataViews from 0x631e88ae7f1d7c20
 import Crypto
 
-pub contract SNKRHUDNFT: NonFungibleToken {
+pub contract DriverzNFT: NonFungibleToken {
 
   // Events
   //
@@ -132,7 +132,7 @@ pub contract SNKRHUDNFT: NonFungibleToken {
   // to a Template struct that give information about the NFTs metadata
   pub resource NFT: NonFungibleToken.INFT, MetadataViews.Resolver {
 
-    // id is unique among all SNKRHUDNFT NFTs on Flow, ordered sequentially from 0
+    // id is unique among all DriverzNFT NFTs on Flow, ordered sequentially from 0
     pub let id: UInt64
 
     // setID and templateID help us locate the specific template in the
@@ -145,7 +145,7 @@ pub contract SNKRHUDNFT: NonFungibleToken {
 
     // Fetch the metadata Template represented by this NFT
     pub fun template(): {NFTTemplate} {
-      return SNKRHUDNFT.getTemplate(setID: self.setID, templateID: self.templateID)
+      return DriverzNFT.getTemplate(setID: self.setID, templateID: self.templateID)
     }
 
     // Proxy for MetadataViews.Resolver.getViews implemented by Template
@@ -162,8 +162,8 @@ pub contract SNKRHUDNFT: NonFungibleToken {
 
     // NFT needs to be told which Template it follows
     init(setID: UInt64, templateID: UInt64, creator: Address) {
-      self.id = SNKRHUDNFT.totalSupply
-      SNKRHUDNFT.totalSupply = SNKRHUDNFT.totalSupply + 1
+      self.id = DriverzNFT.totalSupply
+      DriverzNFT.totalSupply = DriverzNFT.totalSupply + 1
       self.setID = setID
       self.templateID = templateID
       self.creator = creator
@@ -189,16 +189,16 @@ pub contract SNKRHUDNFT: NonFungibleToken {
 
   // Collection
   //
-  // Collections provide a way for collectors to store SNKRHUDNFT NFTs in their
+  // Collections provide a way for collectors to store DriverzNFT NFTs in their
   // Flow account.
 
   // Exposing this interface allows external parties to inspect a Flow
-  // account's SNKRHUDNFT Collection and deposit NFTs
+  // account's DriverzNFT Collection and deposit NFTs
   pub resource interface CollectionPublic {
     pub fun deposit(token: @NonFungibleToken.NFT)
     pub fun getIDs(): [UInt64]
     pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT
-    pub fun borrowSNKRHUDNFT(id: UInt64): &NFT
+    pub fun borrowDriverzNFT(id: UInt64): &NFT
   }
 
   pub resource Collection: CollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic, MetadataViews.ResolverCollection {
@@ -206,10 +206,10 @@ pub contract SNKRHUDNFT: NonFungibleToken {
     // NFTs are indexed by its globally assigned id
     pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
-    // Deposit a SNKRHUDNFT into the collection. Safe to assume id's are unique.
+    // Deposit a DriverzNFT into the collection. Safe to assume id's are unique.
     pub fun deposit(token: @NonFungibleToken.NFT) {
-      // Required to ensure this is a SNKRHUDNFT
-      let token <- token as! @SNKRHUDNFT.NFT
+      // Required to ensure this is a DriverzNFT
+      let token <- token as! @DriverzNFT.NFT
       let id: UInt64 = token.id
       let oldToken <- self.ownedNFTs[id] <- token
       emit Deposit(id: id, to: self.owner?.address)
@@ -243,9 +243,9 @@ pub contract SNKRHUDNFT: NonFungibleToken {
       return (&self.ownedNFTs[id] as &NonFungibleToken.NFT?)!
     }
 
-    // Borrow a reference to the specified NFT as a SNKRHUDNFT.
+    // Borrow a reference to the specified NFT as a DriverzNFT.
     // Panics if NFT does not exist in the collection
-    pub fun borrowSNKRHUDNFT(id: UInt64): &NFT {
+    pub fun borrowDriverzNFT(id: UInt64): &NFT {
       pre {
         self.ownedNFTs.containsKey(id)
           : "NFT does not exist in collection."
@@ -384,20 +384,20 @@ pub contract SNKRHUDNFT: NonFungibleToken {
 
   // Create and store a new Set. Return the id of the new Set.
   access(contract) fun createSet(metadata: SetMetadata): UInt64 {
-    let setID = SNKRHUDNFT.totalSets
+    let setID = DriverzNFT.totalSets
 
     let newSet <- create Set(
       id: setID,
       metadata: metadata
     )
-    SNKRHUDNFT.sets[setID] <-! newSet
-    SNKRHUDNFT.totalSets = SNKRHUDNFT.totalSets + 1
+    DriverzNFT.sets[setID] <-! newSet
+    DriverzNFT.totalSets = DriverzNFT.totalSets + 1
     return setID
   }
 
   // Number of sets created by contract
   pub fun setsCount(): UInt64 {
-    return SNKRHUDNFT.totalSets
+    return DriverzNFT.totalSets
   }
 
   // Metadata for the Set
@@ -577,7 +577,7 @@ pub contract SNKRHUDNFT: NonFungibleToken {
     }
 
     pub fun mint(templateID: UInt64, creator: Address): @NFT {
-      let set = (&SNKRHUDNFT.sets[self.setID] as &Set?)!
+      let set = (&DriverzNFT.sets[self.setID] as &Set?)!
       return <- set.mint(templateID: templateID, creator: creator)
     }
   }
@@ -590,11 +590,11 @@ pub contract SNKRHUDNFT: NonFungibleToken {
 
     // Create a set with the provided SetMetadata.
     pub fun createSet(metadata: SetMetadata): UInt64 {
-      return SNKRHUDNFT.createSet(metadata: metadata)
+      return DriverzNFT.createSet(metadata: metadata)
     }
 
     pub fun borrowSet(setID: UInt64): &Set {
-      return (&SNKRHUDNFT.sets[setID] as &Set?)!
+      return (&DriverzNFT.sets[setID] as &Set?)!
     }
 
     pub fun createSetMinter(setID: UInt64): @SetMinter {
@@ -606,13 +606,13 @@ pub contract SNKRHUDNFT: NonFungibleToken {
   init() {
 
     // Collection Paths
-    self.CollectionStoragePath = /storage/SNKRHUDNFTCollection
-    self.CollectionPublicPath = /public/SNKRHUDNFTCollection
-    self.CollectionPrivatePath = /private/SNKRHUDNFTCollection
+    self.CollectionStoragePath = /storage/DriverzNFTCollection
+    self.CollectionPublicPath = /public/DriverzNFTCollection
+    self.CollectionPrivatePath = /private/DriverzNFTCollection
 
     // Admin Storage Path. Save the singleton Admin resource to contract
     // storage.
-    self.AdminStoragePath = /storage/SNKRHUDNFTAdmin
+    self.AdminStoragePath = /storage/DriverzNFTAdmin
     self.account.save<@Admin>(<- create Admin(), to: self.AdminStoragePath)
 
     // Initializations

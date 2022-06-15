@@ -41,7 +41,10 @@ transaction(nftID: UInt64, price: UFix64) {
         let listingIDs = self.storefront.getListingIDs()
         for id in listingIDs {
             let listing = self.storefront.borrowListing(listingResourceID: id)! 
-            if listing.getDetails().nftID == nftID {
+            let details = listing.getDetails()
+            if details.nftID == nftID && 
+                details.nftType == Type<@AllDay.NFT>() && 
+                    details.salePaymentVaultType == Type<@DapperUtilityCoin.Vault>() {
                 self.oldListings.append(listing)
             }
         }
