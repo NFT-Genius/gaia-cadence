@@ -44,12 +44,17 @@ pub fun main(address: Address, listingResourceID: UInt64): PurchaseData {
 
     let display = view as! MetadataViews.Display
 
+    var imageURI = display.thumbnail.uri()
+    if (imageURI.slice(from: 0, upTo: 7) == "ipfs://") {
+        imageURI = "https://images.ongaia.com/ipfs/".concat(imageURI.slice(from: 7, upTo: imageURI.length))
+    }
+
     let purchaseData = PurchaseData(
         id: listingDetails.nftID,
         name: display.name,
         amount: listingDetails.salePrice,
         description: display.description,
-        imageURL: display.thumbnail.uri(),
+        imageURL: imageURI,
     )
 
     return purchaseData
