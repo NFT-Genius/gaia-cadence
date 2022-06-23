@@ -37,8 +37,8 @@ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi
         // create a new collection if the account doesn't have one
         if acct.borrow<&BarterYardClubWerewolf.Collection{NonFungibleToken.Receiver}>(from: BarterYardClubWerewolf.CollectionStoragePath) == nil {
             let collection <- BarterYardClubWerewolf.createEmptyCollection()
-            self.signer.save(<-collection, to: BarterYardClubWerewolf.CollectionStoragePath)
-            self.signer.link<&BarterYardClubWerewolf.Collection{NonFungibleToken.CollectionPublic, MetadataViews.ResolverCollection}>
+            acct.save(<-collection, to: BarterYardClubWerewolf.CollectionStoragePath)
+            acct.link<&BarterYardClubWerewolf.Collection{NonFungibleToken.CollectionPublic, MetadataViews.ResolverCollection}>
                 (BarterYardClubWerewolf.CollectionPublicPath, target: BarterYardClubWerewolf.CollectionStoragePath)
         }
 
