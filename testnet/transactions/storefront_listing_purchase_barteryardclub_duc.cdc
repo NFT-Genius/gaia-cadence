@@ -3,6 +3,7 @@ import NonFungibleToken from 0x631e88ae7f1d7c20
 import DapperUtilityCoin from 0x82ec283f88a62e65
 import BarterYardClubWerewolf from 0x195caada038c5806
 import NFTStorefront from 0x94b06cfca1d8a476
+import MetadataViews from 0x631e88ae7f1d7c20
 
 transaction(merchantAddress: Address, listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {
     let paymentVault: @FungibleToken.Vault
