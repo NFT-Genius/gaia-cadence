@@ -4,7 +4,7 @@ import DapperUtilityCoin from 0x82ec283f88a62e65
 import BarterYardClubWerewolf from 0x195caada038c5806
 import NFTStorefront from 0x94b06cfca1d8a476
 
-transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {
+transaction(merchantAddress: Address, listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {
     let paymentVault: @FungibleToken.Vault
     let nftCollection: &BarterYardClubWerewolf.Collection{NonFungibleToken.Receiver}
     let storefront: &NFTStorefront.Storefront{NFTStorefront.StorefrontPublic}
@@ -53,7 +53,9 @@ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi
             signatureAlgorithm: SignatureAlgorithm.ECDSA_P256
         )
 
-        let data = acct.address.toString()
+        let data = merchantAddress.toString()
+            .concat(":")
+            .concat(acct.address.toString())
             .concat(":")
             .concat(ownerAddress.toString())
             .concat(":")

@@ -5,7 +5,7 @@ import MetaPanda from 0x26e7006d6734ba69
 import AnchainUtils from 0x26e7006d6734ba69
 import NFTStorefront from 0x94b06cfca1d8a476
 
-transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {
+transaction(merchantAddress: Address, listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {
     let paymentVault: @FungibleToken.Vault
     let nftCollection: &MetaPanda.Collection{NonFungibleToken.Receiver}
     let storefront: &NFTStorefront.Storefront{NFTStorefront.StorefrontPublic}
@@ -56,7 +56,9 @@ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi
             signatureAlgorithm: SignatureAlgorithm.ECDSA_P256
         )
 
-        let data = acct.address.toString()
+        let data = merchantAddress.toString()
+            .concat(":")
+            .concat(acct.address.toString())
             .concat(":")
             .concat(ownerAddress.toString())
             .concat(":")
