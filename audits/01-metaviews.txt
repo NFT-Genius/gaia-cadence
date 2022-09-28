@@ -1,0 +1,652 @@
+[1mdiff --git a/transactions/emulator/init_collection_driverz.cdc b/transactions/emulator/init_collection_driverz.cdc[m
+[1mindex b723d6c..9c7136f 100644[m
+[1m--- a/transactions/emulator/init_collection_driverz.cdc[m
+[1m+++ b/transactions/emulator/init_collection_driverz.cdc[m
+[36m@@ -1,5 +1,6 @@[m
+ import DriverzNFT from 0xDriverzNFT[m
+ import NonFungibleToken from 0xNonFungibleToken[m
+[32m+[m[32mimport MetadataViews from 0xMetadataViews[m
+ [m
+ transaction() {[m
+     let signer: AuthAccount[m
+[36m@@ -12,7 +13,8 @@[m [mtransaction() {[m
+         if self.signer.borrow<&DriverzNFT.Collection>(from: DriverzNFT.CollectionStoragePath) == nil {[m
+             let collection <- DriverzNFT.createEmptyCollection() as! @DriverzNFT.Collection[m
+             self.signer.save(<-collection, to: DriverzNFT.CollectionStoragePath)[m
+[31m-            self.signer.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic}>(DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+[32m+[m[32m            self.signer.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+         }[m
+     }[m
+ }[m
+[1mdiff --git a/transactions/emulator/init_collection_snkrhud.cdc b/transactions/emulator/init_collection_snkrhud.cdc[m
+[1mindex a35ecdd..3b16281 100644[m
+[1m--- a/transactions/emulator/init_collection_snkrhud.cdc[m
+[1m+++ b/transactions/emulator/init_collection_snkrhud.cdc[m
+[36m@@ -1,5 +1,6 @@[m
+ import SNKRHUDNFT from 0xf3fcd2c1a78f5eee[m
+ import NonFungibleToken from 0x01cf0e2f2f715450[m
+[32m+[m[32mimport MetadataViews from 0x01cf0e2f2f715450[m
+ [m
+ transaction() {[m
+     let signer: AuthAccount[m
+[36m@@ -12,7 +13,8 @@[m [mtransaction() {[m
+         if self.signer.borrow<&SNKRHUDNFT.Collection>(from: SNKRHUDNFT.CollectionStoragePath) == nil {[m
+             let collection <- SNKRHUDNFT.createEmptyCollection() as! @SNKRHUDNFT.Collection[m
+             self.signer.save(<-collection, to: SNKRHUDNFT.CollectionStoragePath)[m
+[31m-            self.signer.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+[32m+[m[32m            self.signer.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+         }[m
+     }[m
+ }[m
+[1mdiff --git a/transactions/emulator/primary_sale_purchase_driverz_duc.cdc b/transactions/emulator/primary_sale_purchase_driverz_duc.cdc[m
+[1mindex f403748..1789fe8 100644[m
+[1m--- a/transactions/emulator/primary_sale_purchase_driverz_duc.cdc[m
+[1m+++ b/transactions/emulator/primary_sale_purchase_driverz_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0xNonFungibleToken[m
+ import FungibleToken from 0xFungibleToken[m
+ import DriverzNFT from 0xDriverzNFT[m
+ import DapperUtilityCoin from 0xDapperUtilityCoin[m
+[32m+[m[32mimport MetadataViews from 0xMetadataViews[m
+ [m
+ transaction([m
+     marketplaceAddress: Address,[m
+[36m@@ -37,7 +38,8 @@[m [mtransaction([m
+         if signer.getCapability<&{NonFungibleToken.CollectionPublic}>(DriverzNFT.CollectionPublicPath).borrow() == nil {[m
+             let collection <- DriverzNFT.createEmptyCollection() as! @DriverzNFT.Collection[m
+             signer.save(<-collection, to: DriverzNFT.CollectionStoragePath)[m
+[31m-            signer.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic}>(DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+[32m+[m[32m            signer.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+         }[m
+         self.receiverCollection = signer.getCapability<&{NonFungibleToken.CollectionPublic}>(DriverzNFT.CollectionPublicPath).borrow()[m
+             ?? panic("Cannot borrow NFT Collection")[m
+[1mdiff --git a/transactions/emulator/primary_sale_purchase_snkrhud_duc.cdc b/transactions/emulator/primary_sale_purchase_snkrhud_duc.cdc[m
+[1mindex 565df59..8bc1647 100644[m
+[1m--- a/transactions/emulator/primary_sale_purchase_snkrhud_duc.cdc[m
+[1m+++ b/transactions/emulator/primary_sale_purchase_snkrhud_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0xNonFungibleToken[m
+ import FungibleToken from 0xFungibleToken[m
+ import SNKRHUDNFT from 0xSNKRHUDNFT[m
+ import DapperUtilityCoin from 0xDapperUtilityCoin[m
+[32m+[m[32mimport MetadataViews from 0xMetadataViews[m
+ [m
+ transaction([m
+     marketplaceAddress: Address,[m
+[36m@@ -37,7 +38,8 @@[m [mtransaction([m
+         if signer.getCapability<&{NonFungibleToken.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath).borrow() == nil {[m
+             let collection <- SNKRHUDNFT.createEmptyCollection() as! @SNKRHUDNFT.Collection[m
+             signer.save(<-collection, to: SNKRHUDNFT.CollectionStoragePath)[m
+[31m-            signer.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+[32m+[m[32m            signer.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+         }[m
+         self.receiverCollection = signer.getCapability<&{NonFungibleToken.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath).borrow()[m
+             ?? panic("Cannot borrow NFT Collection")[m
+[1mdiff --git a/transactions/emulator/storefront_listing_purchase_dimensionx_duc.cdc b/transactions/emulator/storefront_listing_purchase_dimensionx_duc.cdc[m
+[1mindex 1ed0f25..7a2f36f 100644[m
+[1m--- a/transactions/emulator/storefront_listing_purchase_dimensionx_duc.cdc[m
+[1m+++ b/transactions/emulator/storefront_listing_purchase_dimensionx_duc.cdc[m
+[36m@@ -39,7 +39,7 @@[m [mtransaction(ownerAddress: Address, listingResourceID: UInt64, expectedPrice: UFi[m
+         if acct.borrow<&DimensionX.Collection{NonFungibleToken.Receiver}>(from: DimensionX.CollectionStoragePath) == nil {[m
+             let collection <- DimensionX.createEmptyCollection()[m
+             acct.save(<-collection, to: DimensionX.CollectionStoragePath)[m
+[31m-            acct.link<&DimensionX.Collection{NonFungibleToken.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m            acct.link<&DimensionX.Collection{NonFungibleToken.CollectionPublic, DimensionX.CollectionPublic, MetadataViews.ResolverCollection}>[m
+                 (DimensionX.CollectionPublicPath, target: DimensionX.CollectionStoragePath)[m
+         }[m
+ [m
+[1mdiff --git a/transactions/emulator/storefront_listing_purchase_driverz_duc.cdc b/transactions/emulator/storefront_listing_purchase_driverz_duc.cdc[m
+[1mindex 59e43fb..c068380 100644[m
+[1m--- a/transactions/emulator/storefront_listing_purchase_driverz_duc.cdc[m
+[1m+++ b/transactions/emulator/storefront_listing_purchase_driverz_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0xNonFungibleToken[m
+ import DapperUtilityCoin from 0xDapperUtilityCoin[m
+ import DriverzNFT from 0xDriverzNFT[m
+ import NFTStorefront from 0xNFTStorefront[m
+[32m+[m[32mimport MetadataViews from 0xMetadataViews[m
+ [m
+ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {[m
+     let paymentVault: @FungibleToken.Vault[m
+[36m@@ -39,7 +40,8 @@[m [mtransaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi[m
+         if acct.borrow<&DriverzNFT.Collection>(from: DriverzNFT.CollectionStoragePath) == nil {[m
+             let collection <- DriverzNFT.createEmptyCollection() as! @DriverzNFT.Collection[m
+             acct.save(<-collection, to: DriverzNFT.CollectionStoragePath)[m
+[31m-            acct.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic}>(DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+[32m+[m[32m            acct.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+         }[m
+ [m
+         // borrow receiver's collection[m
+[1mdiff --git a/transactions/emulator/storefront_listing_purchase_flunk_duc.cdc b/transactions/emulator/storefront_listing_purchase_flunk_duc.cdc[m
+[1mindex 9af10d9..0e294b3 100644[m
+[1m--- a/transactions/emulator/storefront_listing_purchase_flunk_duc.cdc[m
+[1m+++ b/transactions/emulator/storefront_listing_purchase_flunk_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0xNonFungibleToken[m
+ import DapperUtilityCoin from 0xDapperUtilityCoin[m
+ import Flunks from 0xFlunks[m
+ import NFTStorefront from 0xNFTStorefront[m
+[32m+[m[32mimport MetadataViews from 0xMetadataViews[m
+ [m
+ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {[m
+     let paymentVault: @FungibleToken.Vault[m
+[36m@@ -38,7 +39,7 @@[m [mtransaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi[m
+         if acct.borrow<&Flunks.Collection{NonFungibleToken.Receiver}>(from: Flunks.CollectionStoragePath) == nil {[m
+             let collection <- Flunks.createEmptyCollection()[m
+             acct.save(<-collection, to: Flunks.CollectionStoragePath)[m
+[31m-            acct.link<&Flunks.Collection{NonFungibleToken.CollectionPublic, Flunks.FlunksCollectionPublic}>([m
+[32m+[m[32m            acct.link<&Flunks.Collection{NonFungibleToken.CollectionPublic, Flunks.FlunksCollectionPublic, MetadataViews.ResolverCollection}>([m
+                 Flunks.CollectionPublicPath,[m
+                 target: Flunks.CollectionStoragePath[m
+             )[m
+[1mdiff --git a/transactions/emulator/storefront_listing_purchase_snkrhud_duc.cdc b/transactions/emulator/storefront_listing_purchase_snkrhud_duc.cdc[m
+[1mindex c83fc4b..6d5f3b4 100644[m
+[1m--- a/transactions/emulator/storefront_listing_purchase_snkrhud_duc.cdc[m
+[1m+++ b/transactions/emulator/storefront_listing_purchase_snkrhud_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0xNonFungibleToken[m
+ import DapperUtilityCoin from 0xDapperUtilityCoin[m
+ import SNKRHUDNFT from 0xSNKRHUDNFT[m
+ import NFTStorefront from 0xNFTStorefront[m
+[32m+[m[32mimport MetadataViews from 0xMetadataViews[m
+ [m
+ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {[m
+     let paymentVault: @FungibleToken.Vault[m
+[36m@@ -39,7 +40,8 @@[m [mtransaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi[m
+         if acct.borrow<&SNKRHUDNFT.Collection>(from: SNKRHUDNFT.CollectionStoragePath) == nil {[m
+             let collection <- SNKRHUDNFT.createEmptyCollection() as! @SNKRHUDNFT.Collection[m
+             acct.save(<-collection, to: SNKRHUDNFT.CollectionStoragePath)[m
+[31m-            acct.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+[32m+[m[32m            acct.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+         }[m
+ [m
+         // borrow receiver's collection[m
+[1mdiff --git a/transactions/mainnet/init_collection_driverz.cdc b/transactions/mainnet/init_collection_driverz.cdc[m
+[1mindex fd5bfa8..40afbb9 100644[m
+[1m--- a/transactions/mainnet/init_collection_driverz.cdc[m
+[1m+++ b/transactions/mainnet/init_collection_driverz.cdc[m
+[36m@@ -1,5 +1,6 @@[m
+ import DriverzNFT from 0xa039bd7d55a96c0c[m
+ import NonFungibleToken from 0x1d7e57aa55817448[m
+[32m+[m[32mimport MetadataViews from 0x1d7e57aa55817448[m
+ [m
+ transaction() {[m
+     let signer: AuthAccount[m
+[36m@@ -12,7 +13,8 @@[m [mtransaction() {[m
+         if self.signer.borrow<&DriverzNFT.Collection>(from: DriverzNFT.CollectionStoragePath) == nil {[m
+             let collection <- DriverzNFT.createEmptyCollection() as! @DriverzNFT.Collection[m
+             self.signer.save(<-collection, to: DriverzNFT.CollectionStoragePath)[m
+[31m-            self.signer.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic}>(DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+[32m+[m[32m            self.signer.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+         }[m
+     }[m
+ }[m
+\ No newline at end of file[m
+[1mdiff --git a/transactions/mainnet/init_collection_dugout_dawgz.cdc b/transactions/mainnet/init_collection_dugout_dawgz.cdc[m
+[1mindex d7fb140..c94db7a 100644[m
+[1m--- a/transactions/mainnet/init_collection_dugout_dawgz.cdc[m
+[1m+++ b/transactions/mainnet/init_collection_dugout_dawgz.cdc[m
+[36m@@ -1,5 +1,6 @@[m
+ import DugoutDawgzNFT from 0xd527bd7a74847cc7[m
+ import NonFungibleToken from 0x1d7e57aa55817448[m
+[32m+[m[32mimport MetadataViews from 0x1d7e57aa55817448[m
+ [m
+ transaction() {[m
+     let signer: AuthAccount[m
+[36m@@ -12,7 +13,8 @@[m [mtransaction() {[m
+         if self.signer.borrow<&DugoutDawgzNFT.Collection>(from: DugoutDawgzNFT.CollectionStoragePath) == nil {[m
+             let collection <- DugoutDawgzNFT.createEmptyCollection() as! @DugoutDawgzNFT.Collection[m
+             self.signer.save(<-collection, to: DugoutDawgzNFT.CollectionStoragePath)[m
+[31m-            self.signer.link<&{NonFungibleToken.CollectionPublic, DugoutDawgzNFT.CollectionPublic}>(DugoutDawgzNFT.CollectionPublicPath, target: DugoutDawgzNFT.CollectionStoragePath)[m
+[32m+[m[32m            self.signer.link<&{NonFungibleToken.CollectionPublic, DugoutDawgzNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (DugoutDawgzNFT.CollectionPublicPath, target: DugoutDawgzNFT.CollectionStoragePath)[m
+         }[m
+     }[m
+ }[m
+[1mdiff --git a/transactions/mainnet/init_collection_snkrhud.cdc b/transactions/mainnet/init_collection_snkrhud.cdc[m
+[1mindex cd7cf56..5855277 100644[m
+[1m--- a/transactions/mainnet/init_collection_snkrhud.cdc[m
+[1m+++ b/transactions/mainnet/init_collection_snkrhud.cdc[m
+[36m@@ -1,5 +1,6 @@[m
+ import SNKRHUDNFT from 0x80af1db15aa6535a[m
+ import NonFungibleToken from 0x1d7e57aa55817448[m
+[32m+[m[32mimport MetadataViews from 0x1d7e57aa55817448[m
+ [m
+ transaction() {[m
+     let signer: AuthAccount[m
+[36m@@ -12,7 +13,8 @@[m [mtransaction() {[m
+         if self.signer.borrow<&SNKRHUDNFT.Collection>(from: SNKRHUDNFT.CollectionStoragePath) == nil {[m
+             let collection <- SNKRHUDNFT.createEmptyCollection() as! @SNKRHUDNFT.Collection[m
+             self.signer.save(<-collection, to: SNKRHUDNFT.CollectionStoragePath)[m
+[31m-            self.signer.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+[32m+[m[32m            self.signer.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+         }[m
+     }[m
+ }[m
+\ No newline at end of file[m
+[1mdiff --git a/transactions/mainnet/primary_sale_purchase_driverz_duc.cdc b/transactions/mainnet/primary_sale_purchase_driverz_duc.cdc[m
+[1mindex 0e32d5b..f32efc5 100644[m
+[1m--- a/transactions/mainnet/primary_sale_purchase_driverz_duc.cdc[m
+[1m+++ b/transactions/mainnet/primary_sale_purchase_driverz_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0x1d7e57aa55817448[m
+ import FungibleToken from 0xf233dcee88fe0abe[m
+ import DriverzNFT from 0xa039bd7d55a96c0c[m
+ import DapperUtilityCoin from 0xead892083b3e2c6c[m
+[32m+[m[32mimport MetadataViews from 0x1d7e57aa55817448[m
+ [m
+ transaction([m
+     marketplaceAddress: Address,[m
+[36m@@ -37,7 +38,8 @@[m [mtransaction([m
+         if signer.getCapability<&{NonFungibleToken.CollectionPublic}>(DriverzNFT.CollectionPublicPath).borrow() == nil {[m
+             let collection <- DriverzNFT.createEmptyCollection() as! @DriverzNFT.Collection[m
+             signer.save(<-collection, to: DriverzNFT.CollectionStoragePath)[m
+[31m-            signer.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic}>(DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+[32m+[m[32m            signer.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+         }[m
+         self.receiverCollection = signer.getCapability<&{NonFungibleToken.CollectionPublic}>(DriverzNFT.CollectionPublicPath).borrow()[m
+             ?? panic("Cannot borrow NFT Collection")[m
+[1mdiff --git a/transactions/mainnet/primary_sale_purchase_dugout_dawgz_duc.cdc b/transactions/mainnet/primary_sale_purchase_dugout_dawgz_duc.cdc[m
+[1mindex e070721..f196389 100644[m
+[1m--- a/transactions/mainnet/primary_sale_purchase_dugout_dawgz_duc.cdc[m
+[1m+++ b/transactions/mainnet/primary_sale_purchase_dugout_dawgz_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0x1d7e57aa55817448[m
+ import FungibleToken from 0xf233dcee88fe0abe[m
+ import DugoutDawgzNFT from 0xd527bd7a74847cc7[m
+ import DapperUtilityCoin from 0xead892083b3e2c6c[m
+[32m+[m[32mimport MetadataViews from 0x1d7e57aa55817448[m
+ [m
+ transaction([m
+     marketplaceAddress: Address,[m
+[36m@@ -37,7 +38,8 @@[m [mtransaction([m
+         if signer.getCapability<&{NonFungibleToken.CollectionPublic}>(DugoutDawgzNFT.CollectionPublicPath).borrow() == nil {[m
+             let collection <- DugoutDawgzNFT.createEmptyCollection() as! @DugoutDawgzNFT.Collection[m
+             signer.save(<-collection, to: DugoutDawgzNFT.CollectionStoragePath)[m
+[31m-            signer.link<&{NonFungibleToken.CollectionPublic, DugoutDawgzNFT.CollectionPublic}>(DugoutDawgzNFT.CollectionPublicPath, target: DugoutDawgzNFT.CollectionStoragePath)[m
+[32m+[m[32m            signer.link<&{NonFungibleToken.CollectionPublic, DugoutDawgzNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (DugoutDawgzNFT.CollectionPublicPath, target: DugoutDawgzNFT.CollectionStoragePath)[m
+         }[m
+         self.receiverCollection = signer.getCapability<&{NonFungibleToken.CollectionPublic}>(DugoutDawgzNFT.CollectionPublicPath).borrow()[m
+             ?? panic("Cannot borrow NFT Collection")[m
+[36m@@ -71,4 +73,4 @@[m [mtransaction([m
+     post {[m
+         self.mainDapperUtilityCoinVault.balance == self.balanceBeforeTransfer: "dapperUtilityCoin leakage"[m
+     }[m
+[31m-}[m
+\ No newline at end of file[m
+[32m+[m[32m}[m
+[1mdiff --git a/transactions/mainnet/primary_sale_purchase_snkrhud_duc.cdc b/transactions/mainnet/primary_sale_purchase_snkrhud_duc.cdc[m
+[1mindex 04b7315..ddd8b81 100644[m
+[1m--- a/transactions/mainnet/primary_sale_purchase_snkrhud_duc.cdc[m
+[1m+++ b/transactions/mainnet/primary_sale_purchase_snkrhud_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0x1d7e57aa55817448[m
+ import FungibleToken from 0xf233dcee88fe0abe[m
+ import SNKRHUDNFT from 0x80af1db15aa6535a[m
+ import DapperUtilityCoin from 0xead892083b3e2c6c[m
+[32m+[m[32mimport MetadataViews from 0x1d7e57aa55817448[m
+ [m
+ transaction([m
+     marketplaceAddress: Address,[m
+[36m@@ -37,7 +38,8 @@[m [mtransaction([m
+         if signer.getCapability<&{NonFungibleToken.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath).borrow() == nil {[m
+             let collection <- SNKRHUDNFT.createEmptyCollection() as! @SNKRHUDNFT.Collection[m
+             signer.save(<-collection, to: SNKRHUDNFT.CollectionStoragePath)[m
+[31m-            signer.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+[32m+[m[32m            signer.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+         }[m
+         self.receiverCollection = signer.getCapability<&{NonFungibleToken.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath).borrow()[m
+             ?? panic("Cannot borrow NFT Collection")[m
+[1mdiff --git a/transactions/mainnet/storefront_listing_purchase_driverz_duc.cdc b/transactions/mainnet/storefront_listing_purchase_driverz_duc.cdc[m
+[1mindex 3167e60..fa31172 100644[m
+[1m--- a/transactions/mainnet/storefront_listing_purchase_driverz_duc.cdc[m
+[1m+++ b/transactions/mainnet/storefront_listing_purchase_driverz_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0x1d7e57aa55817448[m
+ import DapperUtilityCoin from 0xead892083b3e2c6c[m
+ import DriverzNFT from 0xa039bd7d55a96c0c[m
+ import NFTStorefront from 0x4eb8a10cb9f87357[m
+[32m+[m[32mimport MetadataViews from 0x1d7e57aa55817448[m
+ [m
+ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {[m
+     let paymentVault: @FungibleToken.Vault[m
+[36m@@ -39,7 +40,8 @@[m [mtransaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi[m
+         if acct.borrow<&DriverzNFT.Collection>(from: DriverzNFT.CollectionStoragePath) == nil {[m
+             let collection <- DriverzNFT.createEmptyCollection() as! @DriverzNFT.Collection[m
+             acct.save(<-collection, to: DriverzNFT.CollectionStoragePath)[m
+[31m-            acct.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic}>(DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+[32m+[m[32m            acct.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+         }[m
+ [m
+         // borrow receiver's collection[m
+[1mdiff --git a/transactions/mainnet/storefront_listing_purchase_dugout_dawgz_duc.cdc b/transactions/mainnet/storefront_listing_purchase_dugout_dawgz_duc.cdc[m
+[1mindex 8603e51..966393a 100644[m
+[1m--- a/transactions/mainnet/storefront_listing_purchase_dugout_dawgz_duc.cdc[m
+[1m+++ b/transactions/mainnet/storefront_listing_purchase_dugout_dawgz_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0x1d7e57aa55817448[m
+ import DapperUtilityCoin from 0xead892083b3e2c6c[m
+ import DugoutDawgzNFT from 0xd527bd7a74847cc7[m
+ import NFTStorefront from 0x4eb8a10cb9f87357[m
+[32m+[m[32mimport MetadataViews from 0x1d7e57aa55817448[m
+ [m
+ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {[m
+     let paymentVault: @FungibleToken.Vault[m
+[36m@@ -39,7 +40,8 @@[m [mtransaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi[m
+         if acct.borrow<&DugoutDawgzNFT.Collection>(from: DugoutDawgzNFT.CollectionStoragePath) == nil {[m
+             let collection <- DugoutDawgzNFT.createEmptyCollection() as! @DugoutDawgzNFT.Collection[m
+             acct.save(<-collection, to: DugoutDawgzNFT.CollectionStoragePath)[m
+[31m-            acct.link<&{NonFungibleToken.CollectionPublic, DugoutDawgzNFT.CollectionPublic}>(DugoutDawgzNFT.CollectionPublicPath, target: DugoutDawgzNFT.CollectionStoragePath)[m
+[32m+[m[32m            acct.link<&{NonFungibleToken.CollectionPublic, DugoutDawgzNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (DugoutDawgzNFT.CollectionPublicPath, target: DugoutDawgzNFT.CollectionStoragePath)[m
+         }[m
+ [m
+         // borrow receiver's collection[m
+[1mdiff --git a/transactions/mainnet/storefront_listing_purchase_flunk_duc.cdc b/transactions/mainnet/storefront_listing_purchase_flunk_duc.cdc[m
+[1mindex 0fc65d4..a273364 100644[m
+[1m--- a/transactions/mainnet/storefront_listing_purchase_flunk_duc.cdc[m
+[1m+++ b/transactions/mainnet/storefront_listing_purchase_flunk_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0x1d7e57aa55817448[m
+ import DapperUtilityCoin from 0xead892083b3e2c6c[m
+ import Flunks from 0x807c3d470888cc48[m
+ import NFTStorefront from 0x4eb8a10cb9f87357[m
+[32m+[m[32mimport MetadataViews from 0x1d7e57aa55817448[m
+ [m
+ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {[m
+     let paymentVault: @FungibleToken.Vault[m
+[36m@@ -38,7 +39,7 @@[m [mtransaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi[m
+         if acct.borrow<&Flunks.Collection{NonFungibleToken.Receiver}>(from: Flunks.CollectionStoragePath) == nil {[m
+             let collection <- Flunks.createEmptyCollection()[m
+             acct.save(<-collection, to: Flunks.CollectionStoragePath)[m
+[31m-            acct.link<&Flunks.Collection{NonFungibleToken.CollectionPublic, Flunks.FlunksCollectionPublic}>([m
+[32m+[m[32m            acct.link<&Flunks.Collection{NonFungibleToken.CollectionPublic, Flunks.FlunksCollectionPublic, MetadataViews.ResolverCollection}>([m
+                 Flunks.CollectionPublicPath,[m
+                 target: Flunks.CollectionStoragePath[m
+             )[m
+[1mdiff --git a/transactions/mainnet/storefront_listing_purchase_gaia_duc.cdc b/transactions/mainnet/storefront_listing_purchase_gaia_duc.cdc[m
+[1mindex e50cefd..a5c7b74 100644[m
+[1m--- a/transactions/mainnet/storefront_listing_purchase_gaia_duc.cdc[m
+[1m+++ b/transactions/mainnet/storefront_listing_purchase_gaia_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0x1d7e57aa55817448[m
+ import DapperUtilityCoin from 0xead892083b3e2c6c[m
+ import Gaia from 0x8b148183c28ff88f[m
+ import NFTStorefront from 0x4eb8a10cb9f87357[m
+[32m+[m[32mimport MetadataViews from 0x1d7e57aa55817448[m
+ [m
+ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {[m
+     let paymentVault: @FungibleToken.Vault[m
+[36m@@ -38,7 +39,7 @@[m [mtransaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi[m
+         if acct.borrow<&Gaia.Collection{NonFungibleToken.Receiver}>(from: Gaia.CollectionStoragePath) == nil {[m
+             let collection <- Gaia.createEmptyCollection()[m
+             acct.save(<-collection, to: Gaia.CollectionStoragePath)[m
+[31m-            acct.link<&Gaia.Collection{NonFungibleToken.CollectionPublic, Gaia.CollectionPublic}>([m
+[32m+[m[32m            acct.link<&Gaia.Collection{NonFungibleToken.CollectionPublic, Gaia.CollectionPublic, MetadataViews.ResolverCollection}>([m
+                 Gaia.CollectionPublicPath,[m
+                 target: Gaia.CollectionStoragePath[m
+             )[m
+[1mdiff --git a/transactions/mainnet/storefront_listing_purchase_snkrhud_duc.cdc b/transactions/mainnet/storefront_listing_purchase_snkrhud_duc.cdc[m
+[1mindex 2780352..977ed5e 100644[m
+[1m--- a/transactions/mainnet/storefront_listing_purchase_snkrhud_duc.cdc[m
+[1m+++ b/transactions/mainnet/storefront_listing_purchase_snkrhud_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0x1d7e57aa55817448[m
+ import DapperUtilityCoin from 0xead892083b3e2c6c[m
+ import SNKRHUDNFT from 0x80af1db15aa6535a[m
+ import NFTStorefront from 0x4eb8a10cb9f87357[m
+[32m+[m[32mimport MetadataViews from 0x1d7e57aa55817448[m
+ [m
+ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {[m
+     let paymentVault: @FungibleToken.Vault[m
+[36m@@ -34,12 +35,12 @@[m [mtransaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi[m
+         self.balanceBeforeTransfer = self.mainDapperUtilityCoinVault.balance[m
+         self.paymentVault <- self.mainDapperUtilityCoinVault.withdraw(amount: price)[m
+ [m
+[31m-[m
+         // create a new NFT collection if the account doesn't have one[m
+         if acct.borrow<&SNKRHUDNFT.Collection>(from: SNKRHUDNFT.CollectionStoragePath) == nil {[m
+             let collection <- SNKRHUDNFT.createEmptyCollection() as! @SNKRHUDNFT.Collection[m
+             acct.save(<-collection, to: SNKRHUDNFT.CollectionStoragePath)[m
+[31m-            acct.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+[32m+[m[32m            acct.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+         }[m
+ [m
+         // borrow receiver's collection[m
+[1mdiff --git a/transactions/testnet/init_collection_driverz.cdc b/transactions/testnet/init_collection_driverz.cdc[m
+[1mindex df6a2d4..97cbc93 100644[m
+[1m--- a/transactions/testnet/init_collection_driverz.cdc[m
+[1m+++ b/transactions/testnet/init_collection_driverz.cdc[m
+[36m@@ -1,5 +1,6 @@[m
+ import DriverzNFT from 0xf44b704689c35798[m
+ import NonFungibleToken from 0x631e88ae7f1d7c20[m
+[32m+[m[32mimport MetadataViews from 0x631e88ae7f1d7c20[m
+ [m
+ transaction() {[m
+     let signer: AuthAccount[m
+[36m@@ -12,7 +13,8 @@[m [mtransaction() {[m
+         if self.signer.borrow<&DriverzNFT.Collection>(from: DriverzNFT.CollectionStoragePath) == nil {[m
+             let collection <- DriverzNFT.createEmptyCollection() as! @DriverzNFT.Collection[m
+             self.signer.save(<-collection, to: DriverzNFT.CollectionStoragePath)[m
+[31m-            self.signer.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic}>(DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+[32m+[m[32m            self.signer.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+         }[m
+     }[m
+ }[m
+[1mdiff --git a/transactions/testnet/init_collection_dugout_dawgz.cdc b/transactions/testnet/init_collection_dugout_dawgz.cdc[m
+[1mindex 9061517..ab34540 100644[m
+[1m--- a/transactions/testnet/init_collection_dugout_dawgz.cdc[m
+[1m+++ b/transactions/testnet/init_collection_dugout_dawgz.cdc[m
+[36m@@ -1,5 +1,6 @@[m
+ import DugoutDawgzNFT from 0x44eb6c679f0a4adc[m
+ import NonFungibleToken from 0x631e88ae7f1d7c20[m
+[32m+[m[32mimport MetadataViews from 0x631e88ae7f1d7c20[m
+ [m
+ transaction() {[m
+     let signer: AuthAccount[m
+[36m@@ -12,7 +13,8 @@[m [mtransaction() {[m
+         if self.signer.borrow<&DugoutDawgzNFT.Collection>(from: DugoutDawgzNFT.CollectionStoragePath) == nil {[m
+             let collection <- DugoutDawgzNFT.createEmptyCollection() as! @DugoutDawgzNFT.Collection[m
+             self.signer.save(<-collection, to: DugoutDawgzNFT.CollectionStoragePath)[m
+[31m-            self.signer.link<&{NonFungibleToken.CollectionPublic, DugoutDawgzNFT.CollectionPublic}>(DugoutDawgzNFT.CollectionPublicPath, target: DugoutDawgzNFT.CollectionStoragePath)[m
+[32m+[m[32m            self.signer.link<&{NonFungibleToken.CollectionPublic, DugoutDawgzNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (DugoutDawgzNFT.CollectionPublicPath, target: DugoutDawgzNFT.CollectionStoragePath)[m
+         }[m
+     }[m
+ }[m
+[1mdiff --git a/transactions/testnet/init_collection_snkrhud.cdc b/transactions/testnet/init_collection_snkrhud.cdc[m
+[1mindex 6b9c5af..8f70529 100644[m
+[1m--- a/transactions/testnet/init_collection_snkrhud.cdc[m
+[1m+++ b/transactions/testnet/init_collection_snkrhud.cdc[m
+[36m@@ -1,5 +1,6 @@[m
+ import SNKRHUDNFT from 0x9a85ed382b96c857[m
+ import NonFungibleToken from 0x631e88ae7f1d7c20[m
+[32m+[m[32mimport MetadataViews from 0x631e88ae7f1d7c20[m
+ [m
+ transaction() {[m
+     let signer: AuthAccount[m
+[36m@@ -12,7 +13,8 @@[m [mtransaction() {[m
+         if self.signer.borrow<&SNKRHUDNFT.Collection>(from: SNKRHUDNFT.CollectionStoragePath) == nil {[m
+             let collection <- SNKRHUDNFT.createEmptyCollection() as! @SNKRHUDNFT.Collection[m
+             self.signer.save(<-collection, to: SNKRHUDNFT.CollectionStoragePath)[m
+[31m-            self.signer.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+[32m+[m[32m            self.signer.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+         }[m
+     }[m
+ }[m
+[1mdiff --git a/transactions/testnet/primary_sale_purchase_driverz_duc.cdc b/transactions/testnet/primary_sale_purchase_driverz_duc.cdc[m
+[1mindex 39c742a..e3562ea 100644[m
+[1m--- a/transactions/testnet/primary_sale_purchase_driverz_duc.cdc[m
+[1m+++ b/transactions/testnet/primary_sale_purchase_driverz_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0x631e88ae7f1d7c20[m
+ import FungibleToken from 0x9a0766d93b6608b7[m
+ import DriverzNFT from 0xf44b704689c35798[m
+ import DapperUtilityCoin from 0x82ec283f88a62e65[m
+[32m+[m[32mimport MetadataViews from 0x631e88ae7f1d7c20[m
+ [m
+ transaction([m
+     marketplaceAddress: Address,[m
+[36m@@ -37,7 +38,8 @@[m [mtransaction([m
+         if signer.getCapability<&{NonFungibleToken.CollectionPublic}>(DriverzNFT.CollectionPublicPath).borrow() == nil {[m
+             let collection <- DriverzNFT.createEmptyCollection() as! @DriverzNFT.Collection[m
+             signer.save(<-collection, to: DriverzNFT.CollectionStoragePath)[m
+[31m-            signer.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic}>(DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+[32m+[m[32m            signer.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+         }[m
+         self.receiverCollection = signer.getCapability<&{NonFungibleToken.CollectionPublic}>(DriverzNFT.CollectionPublicPath).borrow()[m
+             ?? panic("Cannot borrow NFT Collection")[m
+[1mdiff --git a/transactions/testnet/primary_sale_purchase_dugout_dawgz_duc.cdc b/transactions/testnet/primary_sale_purchase_dugout_dawgz_duc.cdc[m
+[1mindex 7493e0a..4f3780e 100644[m
+[1m--- a/transactions/testnet/primary_sale_purchase_dugout_dawgz_duc.cdc[m
+[1m+++ b/transactions/testnet/primary_sale_purchase_dugout_dawgz_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0x631e88ae7f1d7c20[m
+ import FungibleToken from 0x9a0766d93b6608b7[m
+ import DugoutDawgzNFT from 0x44eb6c679f0a4adc[m
+ import DapperUtilityCoin from 0x82ec283f88a62e65[m
+[32m+[m[32mimport MetadataViews from 0x631e88ae7f1d7c20[m
+ [m
+ transaction([m
+     marketplaceAddress: Address,[m
+[36m@@ -37,7 +38,8 @@[m [mtransaction([m
+         if signer.getCapability<&{NonFungibleToken.CollectionPublic}>(DugoutDawgzNFT.CollectionPublicPath).borrow() == nil {[m
+             let collection <- DugoutDawgzNFT.createEmptyCollection() as! @DugoutDawgzNFT.Collection[m
+             signer.save(<-collection, to: DugoutDawgzNFT.CollectionStoragePath)[m
+[31m-            signer.link<&{NonFungibleToken.CollectionPublic, DugoutDawgzNFT.CollectionPublic}>(DugoutDawgzNFT.CollectionPublicPath, target: DugoutDawgzNFT.CollectionStoragePath)[m
+[32m+[m[32m            signer.link<&{NonFungibleToken.CollectionPublic, DugoutDawgzNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (DugoutDawgzNFT.CollectionPublicPath, target: DugoutDawgzNFT.CollectionStoragePath)[m
+         }[m
+         self.receiverCollection = signer.getCapability<&{NonFungibleToken.CollectionPublic}>(DugoutDawgzNFT.CollectionPublicPath).borrow()[m
+             ?? panic("Cannot borrow NFT Collection")[m
+[1mdiff --git a/transactions/testnet/primary_sale_purchase_snkrhud_duc.cdc b/transactions/testnet/primary_sale_purchase_snkrhud_duc.cdc[m
+[1mindex a0f46bf..cd954a2 100644[m
+[1m--- a/transactions/testnet/primary_sale_purchase_snkrhud_duc.cdc[m
+[1m+++ b/transactions/testnet/primary_sale_purchase_snkrhud_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0x631e88ae7f1d7c20[m
+ import FungibleToken from 0x9a0766d93b6608b7[m
+ import SNKRHUDNFT from 0x9a85ed382b96c857[m
+ import DapperUtilityCoin from 0x82ec283f88a62e65[m
+[32m+[m[32mimport MetadataViews from 0x631e88ae7f1d7c20[m
+ [m
+ transaction([m
+     marketplaceAddress: Address,[m
+[36m@@ -37,7 +38,8 @@[m [mtransaction([m
+         if signer.getCapability<&{NonFungibleToken.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath).borrow() == nil {[m
+             let collection <- SNKRHUDNFT.createEmptyCollection() as! @SNKRHUDNFT.Collection[m
+             signer.save(<-collection, to: SNKRHUDNFT.CollectionStoragePath)[m
+[31m-            signer.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+[32m+[m[32m            signer.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+         }[m
+         self.receiverCollection = signer.getCapability<&{NonFungibleToken.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath).borrow()[m
+             ?? panic("Cannot borrow NFT Collection")[m
+[1mdiff --git a/transactions/testnet/storefront_listing_purchase_driverz_duc.cdc b/transactions/testnet/storefront_listing_purchase_driverz_duc.cdc[m
+[1mindex 337bd7c..7dbc80f 100644[m
+[1m--- a/transactions/testnet/storefront_listing_purchase_driverz_duc.cdc[m
+[1m+++ b/transactions/testnet/storefront_listing_purchase_driverz_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0x631e88ae7f1d7c20[m
+ import DapperUtilityCoin from 0x82ec283f88a62e65[m
+ import DriverzNFT from 0xf44b704689c35798[m
+ import NFTStorefront from 0x94b06cfca1d8a476[m
+[32m+[m[32mimport MetadataViews from 0x631e88ae7f1d7c20[m
+ [m
+ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {[m
+     let paymentVault: @FungibleToken.Vault[m
+[36m@@ -39,7 +40,8 @@[m [mtransaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi[m
+         if acct.borrow<&DriverzNFT.Collection>(from: DriverzNFT.CollectionStoragePath) == nil {[m
+             let collection <- DriverzNFT.createEmptyCollection() as! @DriverzNFT.Collection[m
+             acct.save(<-collection, to: DriverzNFT.CollectionStoragePath)[m
+[31m-            acct.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic}>(DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+[32m+[m[32m            acct.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)[m
+         }[m
+ [m
+         // borrow receiver's collection[m
+[1mdiff --git a/transactions/testnet/storefront_listing_purchase_dugout_dawgz_duc.cdc b/transactions/testnet/storefront_listing_purchase_dugout_dawgz_duc.cdc[m
+[1mindex f55e119..692c66b 100644[m
+[1m--- a/transactions/testnet/storefront_listing_purchase_dugout_dawgz_duc.cdc[m
+[1m+++ b/transactions/testnet/storefront_listing_purchase_dugout_dawgz_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0x631e88ae7f1d7c20[m
+ import DapperUtilityCoin from 0x82ec283f88a62e65[m
+ import DugoutDawgzNFT from 0x44eb6c679f0a4adc[m
+ import NFTStorefront from 0x94b06cfca1d8a476[m
+[32m+[m[32mimport MetadataViews from 0x631e88ae7f1d7c20[m
+ [m
+ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {[m
+     let paymentVault: @FungibleToken.Vault[m
+[36m@@ -39,7 +40,8 @@[m [mtransaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi[m
+         if acct.borrow<&DugoutDawgzNFT.Collection>(from: DugoutDawgzNFT.CollectionStoragePath) == nil {[m
+             let collection <- DugoutDawgzNFT.createEmptyCollection() as! @DugoutDawgzNFT.Collection[m
+             acct.save(<-collection, to: DugoutDawgzNFT.CollectionStoragePath)[m
+[31m-            acct.link<&{NonFungibleToken.CollectionPublic, DugoutDawgzNFT.CollectionPublic}>(DugoutDawgzNFT.CollectionPublicPath, target: DugoutDawgzNFT.CollectionStoragePath)[m
+[32m+[m[32m            acct.link<&{NonFungibleToken.CollectionPublic, DugoutDawgzNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (DugoutDawgzNFT.CollectionPublicPath, target: DugoutDawgzNFT.CollectionStoragePath)[m
+         }[m
+ [m
+         // borrow receiver's collection[m
+[1mdiff --git a/transactions/testnet/storefront_listing_purchase_flunk_duc.cdc b/transactions/testnet/storefront_listing_purchase_flunk_duc.cdc[m
+[1mindex 14998b9..085dd74 100644[m
+[1m--- a/transactions/testnet/storefront_listing_purchase_flunk_duc.cdc[m
+[1m+++ b/transactions/testnet/storefront_listing_purchase_flunk_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0x631e88ae7f1d7c20[m
+ import DapperUtilityCoin from 0x82ec283f88a62e65[m
+ import Flunks from 0xe666c53e1758dec6[m
+ import NFTStorefront from 0x94b06cfca1d8a476[m
+[32m+[m[32mimport MetadataViews from 0x631e88ae7f1d7c20[m
+ [m
+ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {[m
+     let paymentVault: @FungibleToken.Vault[m
+[36m@@ -38,7 +39,7 @@[m [mtransaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi[m
+         if acct.borrow<&Flunks.Collection{NonFungibleToken.Receiver}>(from: Flunks.CollectionStoragePath) == nil {[m
+             let collection <- Flunks.createEmptyCollection()[m
+             acct.save(<-collection, to: Flunks.CollectionStoragePath)[m
+[31m-            acct.link<&Flunks.Collection{NonFungibleToken.CollectionPublic, Flunks.FlunksCollectionPublic}>([m
+[32m+[m[32m            acct.link<&Flunks.Collection{NonFungibleToken.CollectionPublic, Flunks.FlunksCollectionPublic, MetadataViews.ResolverCollection}>([m
+                 Flunks.CollectionPublicPath,[m
+                 target: Flunks.CollectionStoragePath[m
+             )[m
+[1mdiff --git a/transactions/testnet/storefront_listing_purchase_flunk_flow.cdc b/transactions/testnet/storefront_listing_purchase_flunk_flow.cdc[m
+[1mindex 4dea354..b4ac0e4 100644[m
+[1m--- a/transactions/testnet/storefront_listing_purchase_flunk_flow.cdc[m
+[1m+++ b/transactions/testnet/storefront_listing_purchase_flunk_flow.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0x631e88ae7f1d7c20[m
+ import FlowToken from 0x7e60df042a9c0868[m
+ import Flunks from 0xe666c53e1758dec6[m
+ import NFTStorefront from 0x94b06cfca1d8a476[m
+[32m+[m[32mimport MetadataViews from 0x631e88ae7f1d7c20[m
+ [m
+ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {[m
+     let paymentVault: @FungibleToken.Vault[m
+[36m@@ -35,7 +36,7 @@[m [mtransaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi[m
+         if acct.borrow<&Flunks.Collection{NonFungibleToken.Receiver}>(from: Flunks.CollectionStoragePath) == nil {[m
+             let collection <- Flunks.createEmptyCollection()[m
+             acct.save(<-collection, to: Flunks.CollectionStoragePath)[m
+[31m-            acct.link<&Flunks.Collection{NonFungibleToken.CollectionPublic, Flunks.FlunksCollectionPublic}>([m
+[32m+[m[32m            acct.link<&Flunks.Collection{NonFungibleToken.CollectionPublic, Flunks.FlunksCollectionPublic, MetadataViews.ResolverCollection}>([m
+                 Flunks.CollectionPublicPath,[m
+                 target: Flunks.CollectionStoragePath[m
+             )[m
+[1mdiff --git a/transactions/testnet/storefront_listing_purchase_snkrhud_duc.cdc b/transactions/testnet/storefront_listing_purchase_snkrhud_duc.cdc[m
+[1mindex 63df681..31bfcd2 100644[m
+[1m--- a/transactions/testnet/storefront_listing_purchase_snkrhud_duc.cdc[m
+[1m+++ b/transactions/testnet/storefront_listing_purchase_snkrhud_duc.cdc[m
+[36m@@ -3,6 +3,7 @@[m [mimport NonFungibleToken from 0x631e88ae7f1d7c20[m
+ import DapperUtilityCoin from 0x82ec283f88a62e65[m
+ import SNKRHUDNFT from 0x9a85ed382b96c857[m
+ import NFTStorefront from 0x94b06cfca1d8a476[m
+[32m+[m[32mimport MetadataViews from 0x631e88ae7f1d7c20[m
+ [m
+ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {[m
+     let paymentVault: @FungibleToken.Vault[m
+[36m@@ -39,7 +40,8 @@[m [mtransaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi[m
+         if acct.borrow<&SNKRHUDNFT.Collection>(from: SNKRHUDNFT.CollectionStoragePath) == nil {[m
+             let collection <- SNKRHUDNFT.createEmptyCollection() as! @SNKRHUDNFT.Collection[m
+             acct.save(<-collection, to: SNKRHUDNFT.CollectionStoragePath)[m
+[31m-            acct.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+[32m+[m[32m            acct.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic, MetadataViews.ResolverCollection}>[m
+[32m+[m[32m                (SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)[m
+         }[m
+ [m
+         // borrow receiver's collection[m
