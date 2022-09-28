@@ -3,6 +3,7 @@ import NonFungibleToken from 0x1d7e57aa55817448
 import DapperUtilityCoin from 0xead892083b3e2c6c
 import Flunks from 0x807c3d470888cc48
 import NFTStorefront from 0x4eb8a10cb9f87357
+import MetadataViews from 0x1d7e57aa55817448
 
 transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {
     let paymentVault: @FungibleToken.Vault
@@ -38,7 +39,7 @@ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi
         if acct.borrow<&Flunks.Collection{NonFungibleToken.Receiver}>(from: Flunks.CollectionStoragePath) == nil {
             let collection <- Flunks.createEmptyCollection()
             acct.save(<-collection, to: Flunks.CollectionStoragePath)
-            acct.link<&Flunks.Collection{NonFungibleToken.CollectionPublic, Flunks.FlunksCollectionPublic}>(
+            acct.link<&Flunks.Collection{NonFungibleToken.CollectionPublic, Flunks.FlunksCollectionPublic, MetadataViews.ResolverCollection}>(
                 Flunks.CollectionPublicPath,
                 target: Flunks.CollectionStoragePath
             )

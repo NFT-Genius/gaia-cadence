@@ -3,6 +3,7 @@ import NonFungibleToken from 0x1d7e57aa55817448
 import FungibleToken from 0xf233dcee88fe0abe
 import DugoutDawgzNFT from 0xd527bd7a74847cc7
 import DapperUtilityCoin from 0xead892083b3e2c6c
+import MetadataViews from 0x1d7e57aa55817448
 
 transaction(
     marketplaceAddress: Address,
@@ -37,7 +38,8 @@ transaction(
         if signer.getCapability<&{NonFungibleToken.CollectionPublic}>(DugoutDawgzNFT.CollectionPublicPath).borrow() == nil {
             let collection <- DugoutDawgzNFT.createEmptyCollection() as! @DugoutDawgzNFT.Collection
             signer.save(<-collection, to: DugoutDawgzNFT.CollectionStoragePath)
-            signer.link<&{NonFungibleToken.CollectionPublic, DugoutDawgzNFT.CollectionPublic}>(DugoutDawgzNFT.CollectionPublicPath, target: DugoutDawgzNFT.CollectionStoragePath)
+            signer.link<&{NonFungibleToken.CollectionPublic, DugoutDawgzNFT.CollectionPublic, MetadataViews.ResolverCollection}>
+                (DugoutDawgzNFT.CollectionPublicPath, target: DugoutDawgzNFT.CollectionStoragePath)
         }
         self.receiverCollection = signer.getCapability<&{NonFungibleToken.CollectionPublic}>(DugoutDawgzNFT.CollectionPublicPath).borrow()
             ?? panic("Cannot borrow NFT Collection")

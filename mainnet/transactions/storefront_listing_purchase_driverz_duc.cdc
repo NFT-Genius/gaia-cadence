@@ -3,6 +3,7 @@ import NonFungibleToken from 0x1d7e57aa55817448
 import DapperUtilityCoin from 0xead892083b3e2c6c
 import DriverzNFT from 0xa039bd7d55a96c0c
 import NFTStorefront from 0x4eb8a10cb9f87357
+import MetadataViews from 0x1d7e57aa55817448
 
 transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {
     let paymentVault: @FungibleToken.Vault
@@ -39,7 +40,8 @@ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi
         if acct.borrow<&DriverzNFT.Collection>(from: DriverzNFT.CollectionStoragePath) == nil {
             let collection <- DriverzNFT.createEmptyCollection() as! @DriverzNFT.Collection
             acct.save(<-collection, to: DriverzNFT.CollectionStoragePath)
-            acct.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic}>(DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)
+            acct.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic, MetadataViews.ResolverCollection}>
+                (DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)
         }
 
         // borrow receiver's collection

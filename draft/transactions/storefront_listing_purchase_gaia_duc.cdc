@@ -1,8 +1,8 @@
-import FungibleToken from 0x9a0766d93b6608b7
-import NonFungibleToken from 0x631e88ae7f1d7c20
-import DapperUtilityCoin from 0x82ec283f88a62e65
-import Gaia from 0x40e47dca6a761db7
-import NFTStorefront from 0x94b06cfca1d8a476
+import FungibleToken from 0xFungibleToken
+import NonFungibleToken from 0xNonFungibleToken
+import DapperUtilityCoin from 0xDapperUtilityCoin
+import Gaia from 0xGaia
+import NFTStorefront from 0xNFTStorefront
 
 transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {
     let paymentVault: @FungibleToken.Vault
@@ -51,7 +51,7 @@ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi
 
         // verify signature
         let publicKey = PublicKey(
-            publicKey: "5fbbb87a5d3f1682f679afc8b46d6d9e65ed6296dcf001d026167380472875a676b38e1b583042d3f8a9c2eba1ae242295f56ef78d32c1fa8297a764b67ce8f0".decodeHex(),
+            publicKey: "dddd52da46af51203d5101de0214c2f0a22d97bcc0c824f6a2dfe91baa4e94465d2f9ffd8180d84fcfa72dc78cdebe3842a7b1a843e76444d81bdbf77ff29be1".decodeHex(),
             signatureAlgorithm: SignatureAlgorithm.ECDSA_P256
         )
 
