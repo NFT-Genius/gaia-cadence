@@ -3,6 +3,7 @@ import NonFungibleToken from 0x1d7e57aa55817448
 import FungibleToken from 0xf233dcee88fe0abe
 import SNKRHUDNFT from 0x80af1db15aa6535a
 import DapperUtilityCoin from 0xead892083b3e2c6c
+import MetadataViews from 0x1d7e57aa55817448
 
 transaction(
     marketplaceAddress: Address,
@@ -37,7 +38,8 @@ transaction(
         if signer.getCapability<&{NonFungibleToken.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath).borrow() == nil {
             let collection <- SNKRHUDNFT.createEmptyCollection() as! @SNKRHUDNFT.Collection
             signer.save(<-collection, to: SNKRHUDNFT.CollectionStoragePath)
-            signer.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)
+            signer.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic, MetadataViews.ResolverCollection}>
+                (SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)
         }
         self.receiverCollection = signer.getCapability<&{NonFungibleToken.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath).borrow()
             ?? panic("Cannot borrow NFT Collection")

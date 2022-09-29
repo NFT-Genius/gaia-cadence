@@ -3,6 +3,7 @@ import NonFungibleToken from 0x631e88ae7f1d7c20
 import FungibleToken from 0x9a0766d93b6608b7
 import DriverzNFT from 0xf44b704689c35798
 import DapperUtilityCoin from 0x82ec283f88a62e65
+import MetadataViews from 0x631e88ae7f1d7c20
 
 transaction(
     marketplaceAddress: Address,
@@ -37,7 +38,8 @@ transaction(
         if signer.getCapability<&{NonFungibleToken.CollectionPublic}>(DriverzNFT.CollectionPublicPath).borrow() == nil {
             let collection <- DriverzNFT.createEmptyCollection() as! @DriverzNFT.Collection
             signer.save(<-collection, to: DriverzNFT.CollectionStoragePath)
-            signer.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic}>(DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)
+            signer.link<&{NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic, MetadataViews.ResolverCollection}>
+                (DriverzNFT.CollectionPublicPath, target: DriverzNFT.CollectionStoragePath)
         }
         self.receiverCollection = signer.getCapability<&{NonFungibleToken.CollectionPublic}>(DriverzNFT.CollectionPublicPath).borrow()
             ?? panic("Cannot borrow NFT Collection")

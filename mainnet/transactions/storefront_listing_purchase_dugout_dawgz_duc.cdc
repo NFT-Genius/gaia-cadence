@@ -3,6 +3,7 @@ import NonFungibleToken from 0x1d7e57aa55817448
 import DapperUtilityCoin from 0xead892083b3e2c6c
 import DugoutDawgzNFT from 0xd527bd7a74847cc7
 import NFTStorefront from 0x4eb8a10cb9f87357
+import MetadataViews from 0x1d7e57aa55817448
 
 transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {
     let paymentVault: @FungibleToken.Vault
@@ -39,7 +40,8 @@ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi
         if acct.borrow<&DugoutDawgzNFT.Collection>(from: DugoutDawgzNFT.CollectionStoragePath) == nil {
             let collection <- DugoutDawgzNFT.createEmptyCollection() as! @DugoutDawgzNFT.Collection
             acct.save(<-collection, to: DugoutDawgzNFT.CollectionStoragePath)
-            acct.link<&{NonFungibleToken.CollectionPublic, DugoutDawgzNFT.CollectionPublic}>(DugoutDawgzNFT.CollectionPublicPath, target: DugoutDawgzNFT.CollectionStoragePath)
+            acct.link<&{NonFungibleToken.CollectionPublic, DugoutDawgzNFT.CollectionPublic, MetadataViews.ResolverCollection}>
+                (DugoutDawgzNFT.CollectionPublicPath, target: DugoutDawgzNFT.CollectionStoragePath)
         }
 
         // borrow receiver's collection

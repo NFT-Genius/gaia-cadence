@@ -3,6 +3,7 @@ import NonFungibleToken from 0x1d7e57aa55817448
 import DapperUtilityCoin from 0xead892083b3e2c6c
 import SNKRHUDNFT from 0x80af1db15aa6535a
 import NFTStorefront from 0x4eb8a10cb9f87357
+import MetadataViews from 0x1d7e57aa55817448
 
 transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {
     let paymentVault: @FungibleToken.Vault
@@ -34,12 +35,12 @@ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi
         self.balanceBeforeTransfer = self.mainDapperUtilityCoinVault.balance
         self.paymentVault <- self.mainDapperUtilityCoinVault.withdraw(amount: price)
 
-
         // create a new NFT collection if the account doesn't have one
         if acct.borrow<&SNKRHUDNFT.Collection>(from: SNKRHUDNFT.CollectionStoragePath) == nil {
             let collection <- SNKRHUDNFT.createEmptyCollection() as! @SNKRHUDNFT.Collection
             acct.save(<-collection, to: SNKRHUDNFT.CollectionStoragePath)
-            acct.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic}>(SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)
+            acct.link<&{NonFungibleToken.CollectionPublic, SNKRHUDNFT.CollectionPublic, MetadataViews.ResolverCollection}>
+                (SNKRHUDNFT.CollectionPublicPath, target: SNKRHUDNFT.CollectionStoragePath)
         }
 
         // borrow receiver's collection
