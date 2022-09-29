@@ -3,7 +3,6 @@ import NonFungibleToken from 0x1d7e57aa55817448
 import DapperUtilityCoin from 0xead892083b3e2c6c
 import Gaia from 0x8b148183c28ff88f
 import NFTStorefront from 0x4eb8a10cb9f87357
-import MetadataViews from 0x1d7e57aa55817448
 
 transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {
     let paymentVault: @FungibleToken.Vault
@@ -39,7 +38,7 @@ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi
         if acct.borrow<&Gaia.Collection{NonFungibleToken.Receiver}>(from: Gaia.CollectionStoragePath) == nil {
             let collection <- Gaia.createEmptyCollection()
             acct.save(<-collection, to: Gaia.CollectionStoragePath)
-            acct.link<&Gaia.Collection{NonFungibleToken.CollectionPublic, Gaia.CollectionPublic, MetadataViews.ResolverCollection}>(
+            acct.link<&Gaia.Collection{NonFungibleToken.CollectionPublic, Gaia.CollectionPublic}>(
                 Gaia.CollectionPublicPath,
                 target: Gaia.CollectionStoragePath
             )

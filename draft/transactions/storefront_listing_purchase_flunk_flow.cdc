@@ -3,6 +3,7 @@ import NonFungibleToken from 0x631e88ae7f1d7c20
 import FlowToken from 0x7e60df042a9c0868
 import Flunks from 0xe666c53e1758dec6
 import NFTStorefront from 0x94b06cfca1d8a476
+import MetadataViews from 0x631e88ae7f1d7c20
 
 transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFix64, signatureExpiration: UInt64, signature: String) {
     let paymentVault: @FungibleToken.Vault
@@ -35,7 +36,7 @@ transaction(listingResourceID: UInt64, ownerAddress: Address, expectedPrice: UFi
         if acct.borrow<&Flunks.Collection{NonFungibleToken.Receiver}>(from: Flunks.CollectionStoragePath) == nil {
             let collection <- Flunks.createEmptyCollection()
             acct.save(<-collection, to: Flunks.CollectionStoragePath)
-            acct.link<&Flunks.Collection{NonFungibleToken.CollectionPublic, Flunks.FlunksCollectionPublic}>(
+            acct.link<&Flunks.Collection{NonFungibleToken.CollectionPublic, Flunks.FlunksCollectionPublic, MetadataViews.ResolverCollection}>(
                 Flunks.CollectionPublicPath,
                 target: Flunks.CollectionStoragePath
             )
