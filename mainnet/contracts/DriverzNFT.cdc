@@ -2,6 +2,7 @@
 
 import NonFungibleToken from 0x1d7e57aa55817448
 import MetadataViews from 0x1d7e57aa55817448
+import FungibleToken from 0xf233dcee88fe0abe
 import Crypto
 
 pub contract DriverzNFT: NonFungibleToken {
@@ -61,6 +62,22 @@ pub contract DriverzNFT: NonFungibleToken {
   // Total NFT supply
   pub var totalSupply: UInt64
 
+  pub fun externalURL(): MetadataViews.ExternalURL {
+    return MetadataViews.ExternalURL("https://ongaia.com/driverz")
+  }
+
+  pub fun royaltyAddress(): Address {
+    return 0xa039bd7d55a96c0c
+  }
+
+  pub fun squareImageCID(): String {
+    return "QmV4FsnFiU7QY8ybwd5uuXwogVo9wcRExQLwedh7HU1mrU"
+  }
+
+  pub fun bannerImageCID(): String {
+    return "QmYn6vg1pCuKb6jWT3SDHuyX4NDyJB4wvcYarmsyppoGDS"
+  }
+
   // Total number of sets
   access(self) var totalSets: UInt64
 
@@ -80,10 +97,6 @@ pub contract DriverzNFT: NonFungibleToken {
 
     // Representative {string: string} serialization
     pub fun repr(): {String: String}
-
-    // MetadataViews compliant
-    pub fun getViews(): [Type]
-    pub fun resolveView(_ view: Type): AnyStruct?
   }
 
   pub struct DynamicTemplateMetadata: TemplateMetadata {
@@ -96,20 +109,6 @@ pub contract DriverzNFT: NonFungibleToken {
 
     pub fun display(): MetadataViews.Display {
       return self._display
-    }
-
-    pub fun getViews(): [Type] {
-      return [
-        Type<MetadataViews.Display>()
-      ]
-    }
-
-    pub fun resolveView(_ view: Type): AnyStruct? {
-      switch view {
-        case Type<MetadataViews.Display>():
-          return self.display()
-      }
-      return nil
     }
 
     pub fun repr(): {String: String} {
@@ -150,14 +149,86 @@ pub contract DriverzNFT: NonFungibleToken {
 
     // Proxy for MetadataViews.Resolver.getViews implemented by Template
     pub fun getViews(): [Type] {
-      let template = self.template()
-      return template.getViews()
+      return [
+        Type<MetadataViews.NFTView>(),
+        Type<MetadataViews.Display>(),
+        Type<MetadataViews.Royalties>(),
+        Type<MetadataViews.ExternalURL>(),
+        Type<MetadataViews.NFTCollectionDisplay>(),
+        Type<MetadataViews.NFTCollectionData>()
+      ]
     }
 
-    // Proxy for MetadataViews.Resolver.resolveView implemented by Template
     pub fun resolveView(_ view: Type): AnyStruct? {
-      let template = self.template()
-      return template.resolveView(view)
+      switch view {
+        case Type<MetadataViews.NFTView>():
+          let viewResolver = &self as &{MetadataViews.Resolver}
+          return MetadataViews.NFTView(
+              id : self.id,
+              uuid: self.uuid,
+              display: MetadataViews.getDisplay(viewResolver),
+              externalURL : MetadataViews.getExternalURL(viewResolver),
+              collectionData : MetadataViews.getNFTCollectionData(viewResolver),
+              collectionDisplay : MetadataViews.getNFTCollectionDisplay(viewResolver),
+              royalties : MetadataViews.getRoyalties(viewResolver),
+              traits : MetadataViews.getTraits(viewResolver)
+          )
+        case Type<MetadataViews.Display>():
+          let template = self.template()
+          if template.revealed() {
+            return template.metadata!.display()
+          }
+          return template.defaultDisplay
+        case Type<MetadataViews.Royalties>():
+          let royalties: [MetadataViews.Royalty] = []
+          let royaltyReceiverCap = 
+            getAccount(DriverzNFT.royaltyAddress()).getCapability<&{FungibleToken.Receiver}>(/public/dapperUtilityCoinReceiver)
+          if royaltyReceiverCap.check() {
+            royalties.append(
+              MetadataViews.Royalty(
+                  receiver: royaltyReceiverCap,
+                  cut:  0.05,
+                  description: "Creator royalty fee."
+              )
+            )
+          }
+          return MetadataViews.Royalties(royalties)
+        case Type<MetadataViews.ExternalURL>():
+          return DriverzNFT.externalURL() 
+        case Type<MetadataViews.NFTCollectionData>():
+          return MetadataViews.NFTCollectionData(
+            storagePath: DriverzNFT.CollectionStoragePath,
+            publicPath: DriverzNFT.CollectionPublicPath,
+            providerPath: DriverzNFT.CollectionPrivatePath,
+            publicCollection: Type<@DriverzNFT.Collection>(),
+            publicLinkedType: Type<&DriverzNFT.Collection{NonFungibleToken.CollectionPublic, NonFungibleToken.Receiver, DriverzNFT.CollectionPublic, MetadataViews.ResolverCollection}>(),
+            providerLinkedType: Type<&DriverzNFT.Collection{NonFungibleToken.Provider, NonFungibleToken.CollectionPublic, DriverzNFT.CollectionPublic, MetadataViews.ResolverCollection}>(),                    
+            createEmptyCollectionFunction: fun(): @NonFungibleToken.Collection{
+              return <- DriverzNFT.createEmptyCollection()
+            }
+          )
+        case Type<MetadataViews.NFTCollectionDisplay>():
+          return MetadataViews.NFTCollectionDisplay(
+            name: "Driverz",
+            description: "An exclusive collection of energetic Driverz ready to vroom vroom on FLOW.",
+            externalURL: DriverzNFT.externalURL(),
+            squareImage: 
+              MetadataViews.Media(
+                file: MetadataViews.IPFSFile(cid: DriverzNFT.squareImageCID(), path: nil),
+                mediaType: "image/svg+xml"
+              ),
+            bannerImage: 
+              MetadataViews.Media(
+                file: MetadataViews.IPFSFile(cid: DriverzNFT.bannerImageCID(), path: nil),
+                mediaType: "image/svg+xml"
+              ),
+            socials: {
+              "twitter": MetadataViews.ExternalURL("https://twitter.com/DriverzNFT"),
+              "instagram": MetadataViews.ExternalURL("https://www.instagram.com/driverznft/")
+            }
+          )
+      }
+      return nil
     }
 
     // NFT needs to be told which Template it follows
@@ -469,8 +540,6 @@ pub contract DriverzNFT: NonFungibleToken {
     pub fun checksum(): [UInt8]
     pub fun salt(): [UInt8]?
     pub fun revealed(): Bool
-    pub fun getViews(): [Type]
-    pub fun resolveView(_ view: Type): AnyStruct?
   }
 
   pub struct Template: NFTTemplate {
@@ -485,7 +554,7 @@ pub contract DriverzNFT: NonFungibleToken {
     // SHA3_256(salt || metadata.hash()) == checksum
     access(self) var _salt: [UInt8]?
     pub var metadata: {TemplateMetadata}?
-
+    
     // Convenience attribute to mark whether or not Template has minted NFT
     pub var mintID: UInt64?
 
@@ -532,25 +601,6 @@ pub contract DriverzNFT: NonFungibleToken {
     // Mark the NFT as minted
     pub fun markMinted(nftID: UInt64) {
       self.mintID = nftID
-    }
-
-    // Implements MetadataResolver.getViews
-    pub fun getViews(): [Type] {
-      if (!self.revealed()) {
-        return [Type<MetadataViews.Display>()]
-      }
-      return self.metadata!.getViews()
-    }
-
-    // Implements MetadataResolver.resolveView
-    pub fun resolveView(_ view: Type): AnyStruct? {
-      if (!self.revealed()) {
-        if (view != Type<MetadataViews.Display>()) {
-          return nil
-        }
-        return self.defaultDisplay
-      }
-      return self.metadata!.resolveView(view)
     }
 
     init(checksum: [UInt8], defaultDisplay: MetadataViews.Display) {
